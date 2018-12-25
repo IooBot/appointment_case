@@ -72,6 +72,12 @@ const orderbyprops = `
           lastTime
           createdAt
           updatedAt
+          repertory_id {
+              id
+              count
+              createdAt
+              updatedAt
+            }
           server_id {
               id
               name
@@ -141,11 +147,30 @@ const updateorderAndupdaterepertory = `
     }
 `;
 
+const repertorybyid = `
+    query repertorybyid($id: ID) {
+      repertorybyid: repertory_by_id(id: $id) {
+        id
+        service_id {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        count
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
 export {
     serverbyprops,
     servicebyprops,
     orderbyprops,
     userbyid,
     updateuser,
-    updateorderAndupdaterepertory
+    updateorderAndupdaterepertory,
+    repertorybyid
 }

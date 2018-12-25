@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {orderbyprops, updateuser, updateorderAndupdaterepertory} from "../../gql";
+import {orderbyprops, repertorybyid, updateorderAndupdaterepertory} from "../../gql";
 import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
@@ -76,7 +76,9 @@ class OrderedRender extends Component {
                                             <div>人数: {order.customerNumber}</div>
                                             <div>留言: {order.remark}</div>
                                             <div>时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                            <CancelButton/>
+                                            <CancelButton
+                                                repertoryID={order.service_id.repertory_id.id}
+                                            />
                                         </div>
                                     </Card.Body>
                                 </Card>
@@ -96,30 +98,45 @@ class CancelButton extends Component {
     }
 
     render() {
+        let {repertoryID} = this.props;
         return (
-            <Mutation mutation={gql(updateorderAndupdaterepertory)}
-            >
-                {(updateorderAndupdaterepertory, {loading, error}) => {
-                    if (loading)
-                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
-                    if (error)
-                        return 'error';
-                    // 未完待续
-                    return (
-                        <Button type='warning' onClick={() => {
-                            updateorderAndupdaterepertory({
-                                variable: {
-                                    order_id: '',
-                                    repertory_id: '',
-                                    updatedAt: new Date().getTime(),
-                                    orderStatus: 'cancelled',
-                                    count: 1
-                                }
-                            })
-                        }}>取消</Button>
-                    )
-                }}
-            </Mutation>
+            <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
+                {
+                    ({loading, error, data}) => {
+                        if (loading) {
+                            return <Spin className={'spin'}/>
+                        }
+                        if (error) {
+                            return 'error!';
+                        }
+                        console.log(data);
+                        return (
+                            <Mutation mutation={gql(updateorderAndupdaterepertory)}>
+                                {(updateorderAndupdaterepertory, {loading, error}) => {
+                                    if (loading)
+                                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                                    if (error)
+                                        return 'error';
+                                    // 未完待续
+                                    return (
+                                        <Button type='warning' onClick={() => {
+                                            updateorderAndupdaterepertory({
+                                                variable: {
+                                                    order_id: '',
+                                                    repertory_id: '',
+                                                    updatedAt: new Date().getTime(),
+                                                    orderStatus: 'cancelled',
+                                                    count: 1
+                                                }
+                                            })
+                                        }}>取消</Button>
+                                    )
+                                }}
+                            </Mutation>
+                        )
+                    }
+                }
+            </Query>
 
         )
     }
