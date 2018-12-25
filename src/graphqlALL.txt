@@ -1,0 +1,439 @@
+query userbyid($id: ID) {
+  userbyid: user_by_id(id: $id) {
+    id
+    openid
+    admin
+    username
+    password
+    telephone
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+query serverbyprops($name: String, $description: String, $img: String, $createdAt: String, $updatedAt: String) {
+  serverbyprops: server_by_props(name: $name description: $description img: $img createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    name
+    description
+    img
+    createdAt
+    updatedAt
+  }
+}
+
+query servicebyid($id: ID) {
+  servicebyid: service_by_id(id: $id) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    repertory_id {
+      id
+
+      count
+      createdAt
+      updatedAt
+    }
+    description
+    price
+    startTime
+    lastTime
+    createdAt
+    updatedAt
+  }
+}
+
+query repertorybyid($id: ID) {
+  repertorybyid: repertory_by_id(id: $id) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    count
+    createdAt
+    updatedAt
+  }
+}
+
+query orderbyid($id: ID) {
+  orderbyid: order_by_id(id: $id) {
+    payStatus
+    remark
+    payCount
+    updatedAt
+    payTime
+    createdAt
+    orderStatus
+    id
+    user_id {
+      id
+      openid
+      admin
+      username
+      password
+      telephone
+      email
+      createdAt
+      updatedAt
+    }
+    service_id {
+      id
+
+
+      description
+      price
+      startTime
+      lastTime
+      createdAt
+      updatedAt
+    }
+    customerNumber
+  }
+}
+
+query repertorybyprops($server_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  repertorybyprops: repertory_by_props(server_id: $server_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    count
+    createdAt
+    updatedAt
+  }
+}
+
+query servicebyprops($server_id: ID, $repertory_id: ID, $description: String, $price: Float, $startTime: String, $lastTime: String, $createdAt: String, $updatedAt: String) {
+  servicebyprops: service_by_props(server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    repertory_id {
+      id
+
+      count
+      createdAt
+      updatedAt
+    }
+    description
+    price
+    startTime
+    lastTime
+    createdAt
+    updatedAt
+  }
+}
+
+query serverbyid($id: ID) {
+  serverbyid: server_by_id(id: $id) {
+    id
+    name
+    description
+    img
+    createdAt
+    updatedAt
+  }
+}
+
+query userbyprops($openid: String, $admin: String, $username: String, $password: String, $telephone: String, $email: String, $createdAt: String, $updatedAt: String) {
+  userbyprops: user_by_props(openid: $openid admin: $admin username: $username password: $password telephone: $telephone email: $email createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    openid
+    admin
+    username
+    password
+    telephone
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+query orderbyprops($payStatus: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int) {
+  orderbyprops: order_by_props(payStatus: $payStatus remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+    payStatus
+    remark
+    payCount
+    updatedAt
+    payTime
+    createdAt
+    orderStatus
+    id
+    user_id {
+      id
+      openid
+      admin
+      username
+      password
+      telephone
+      email
+      createdAt
+      updatedAt
+    }
+    service_id {
+      id
+
+
+      description
+      price
+      startTime
+      lastTime
+      createdAt
+      updatedAt
+    }
+    customerNumber
+  }
+}
+
+mutation createuser($id: ID!, $openid: String, $admin: String, $username: String, $password: String, $telephone: String, $email: String, $createdAt: String, $updatedAt: String) {
+  createuser: create_user(id: $id openid: $openid admin: $admin username: $username password: $password telephone: $telephone email: $email createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    openid
+    admin
+    username
+    password
+    telephone
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+mutation updateuser($id: ID, $openid: String, $admin: String, $username: String, $password: String, $telephone: String, $email: String, $createdAt: String, $updatedAt: String) {
+  updateuser: update_user(id: $id openid: $openid admin: $admin username: $username password: $password telephone: $telephone email: $email createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    openid
+    admin
+    username
+    password
+    telephone
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+mutation updateservice($id: ID, $server_id: ID, $repertory_id: ID, $description: String, $price: Float, $startTime: String, $lastTime: String, $createdAt: String, $updatedAt: String) {
+  updateservice: update_service(id: $id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    repertory_id {
+      id
+
+      count
+      createdAt
+      updatedAt
+    }
+    description
+    price
+    startTime
+    lastTime
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createservice($id: ID!, $server_id: ID, $repertory_id: ID, $description: String, $price: Float, $startTime: String, $lastTime: String, $createdAt: String, $updatedAt: String) {
+  createservice: create_service(id: $id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    repertory_id {
+      id
+
+      count
+      createdAt
+      updatedAt
+    }
+    description
+    price
+    startTime
+    lastTime
+    createdAt
+    updatedAt
+  }
+}
+
+mutation updateserver($id: ID, $name: String, $description: String, $img: String, $createdAt: String, $updatedAt: String) {
+  updateserver: update_server(id: $id name: $name description: $description img: $img createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    name
+    description
+    img
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createrepertory($id: ID!, $server_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  createrepertory: create_repertory(id: $id server_id: $server_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    count
+    createdAt
+    updatedAt
+  }
+}
+
+mutation deleteorder($payStatus: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $createdAt: String, $orderStatus: String, $id: ID, $user_id: ID, $service_id: ID, $customerNumber: Int) {
+  deleteorder: delete_order(payStatus: $payStatus remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus id: $id user_id: $user_id service_id: $service_id customerNumber: $customerNumber)
+}
+
+mutation deleteuser($id: ID, $openid: String, $admin: String, $username: String, $password: String, $telephone: String, $email: String, $createdAt: String, $updatedAt: String) {
+  deleteuser: delete_user(id: $id openid: $openid admin: $admin username: $username password: $password telephone: $telephone email: $email createdAt: $createdAt updatedAt: $updatedAt)
+}
+
+mutation createorder($payStatus: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $createdAt: String, $orderStatus: String, $id: ID!, $user_id: ID, $service_id: ID, $customerNumber: Int) {
+  createorder: create_order(payStatus: $payStatus remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus id: $id user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+    payStatus
+    remark
+    payCount
+    updatedAt
+    payTime
+    createdAt
+    orderStatus
+    id
+    user_id {
+      id
+      openid
+      admin
+      username
+      password
+      telephone
+      email
+      createdAt
+      updatedAt
+    }
+    service_id {
+      id
+
+
+      description
+      price
+      startTime
+      lastTime
+      createdAt
+      updatedAt
+    }
+    customerNumber
+  }
+}
+
+mutation deleterepertory($id: ID, $server_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  deleterepertory: delete_repertory(id: $id server_id: $server_id count: $count createdAt: $createdAt updatedAt: $updatedAt)
+}
+
+mutation updateorder($payStatus: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $createdAt: String, $orderStatus: String, $id: ID, $user_id: ID, $service_id: ID, $customerNumber: Int) {
+  updateorder: update_order(payStatus: $payStatus remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus id: $id user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+    payStatus
+    remark
+    payCount
+    updatedAt
+    payTime
+    createdAt
+    orderStatus
+    id
+    user_id {
+      id
+      openid
+      admin
+      username
+      password
+      telephone
+      email
+      createdAt
+      updatedAt
+    }
+    service_id {
+      id
+
+
+      description
+      price
+      startTime
+      lastTime
+      createdAt
+      updatedAt
+    }
+    customerNumber
+  }
+}
+
+mutation deleteserver($id: ID, $name: String, $description: String, $img: String, $createdAt: String, $updatedAt: String) {
+  deleteserver: delete_server(id: $id name: $name description: $description img: $img createdAt: $createdAt updatedAt: $updatedAt)
+}
+
+mutation deleteservice($id: ID, $server_id: ID, $repertory_id: ID, $description: String, $price: Float, $startTime: String, $lastTime: String, $createdAt: String, $updatedAt: String) {
+  deleteservice: delete_service(id: $id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime createdAt: $createdAt updatedAt: $updatedAt)
+}
+
+mutation updaterepertory($id: ID, $server_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  updaterepertory: update_repertory(id: $id server_id: $server_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
+    count
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createserver($id: ID!, $name: String, $description: String, $img: String, $createdAt: String, $updatedAt: String) {
+  createserver: create_server(id: $id name: $name description: $description img: $img createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    name
+    description
+    img
+    createdAt
+    updatedAt
+  }
+}
