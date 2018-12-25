@@ -151,13 +151,6 @@ const repertorybyid = `
     query repertorybyid($id: ID) {
       repertorybyid: repertory_by_id(id: $id) {
         id
-        service_id {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
         count
         createdAt
         updatedAt

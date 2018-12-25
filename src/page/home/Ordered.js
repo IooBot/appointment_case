@@ -78,6 +78,7 @@ class OrderedRender extends Component {
                                             <div>时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                             <CancelButton
                                                 repertoryID={order.service_id.repertory_id.id}
+                                                orderID={order.id}
                                             />
                                         </div>
                                     </Card.Body>
@@ -98,7 +99,7 @@ class CancelButton extends Component {
     }
 
     render() {
-        let {repertoryID} = this.props;
+        let {repertoryID, orderID} = this.props;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -110,6 +111,7 @@ class CancelButton extends Component {
                             return 'error!';
                         }
                         console.log(data);
+                        let count = data.repertorybyid.count;
                         return (
                             <Mutation mutation={gql(updateorderAndupdaterepertory)}>
                                 {(updateorderAndupdaterepertory, {loading, error}) => {
@@ -117,16 +119,15 @@ class CancelButton extends Component {
                                         return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
                                     if (error)
                                         return 'error';
-                                    // 未完待续
                                     return (
                                         <Button type='warning' onClick={() => {
                                             updateorderAndupdaterepertory({
                                                 variable: {
-                                                    order_id: '',
-                                                    repertory_id: '',
+                                                    order_id: orderID,
+                                                    repertory_id: repertoryID,
                                                     updatedAt: new Date().getTime(),
                                                     orderStatus: 'cancelled',
-                                                    count: 1
+                                                    count: count+1
                                                 }
                                             })
                                         }}>取消</Button>
