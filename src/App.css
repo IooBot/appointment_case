@@ -1,24 +1,17 @@
-.flex-container {
-  margin: 0 15px;
+#tab-bar.demo {
+  display: flex;
+  flex-direction: column;
 }
-.flex-container .inline {
-  width: 80px!important;
-  margin: 9px 9px 9px 0;
+#tab-bar .demoName {
+  height: 40px;
 }
-.flex-container .small {
-  height: 20px!important;
-  line-height: 20px!important;
+#tab-bar .demo-preview-item .am-tab-bar {
+  background-color: white;
 }
-.sub-title {
-  color: #888;
-  font-size: 14px;
-  padding: 30px 0 18px 0;
-}
-.placeholder {
-  background-color: #ebebef;
-  color: #bbb;
-  text-align: center;
-  height: 30px;
-  line-height: 30px;
-  width: 100%;
+
+.spin {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }

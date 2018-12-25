@@ -1,93 +1,74 @@
-import React, { Component } from 'react';
-import { Flex, WhiteSpace } from 'antd-mobile';
+import React, {Component} from 'react';
+import {TabBar} from 'antd-mobile';
 import './App.css';
-
-const PlaceHolder = ({ className = '', ...restProps }) => (
-    <div className={`${className} placeholder`} {...restProps}>Block</div>
-);
-
-const FlexExample = () => (
-    <div className="flex-container">
-        <div className="sub-title">Basic</div>
-        <Flex>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-        </Flex>
-        <WhiteSpace size="lg" />
-        <Flex>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-        </Flex>
-        <WhiteSpace size="lg" />
-        <Flex>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-            <Flex.Item><PlaceHolder /></Flex.Item>
-        </Flex>
-        <WhiteSpace size="lg" />
-
-        <div className="sub-title">Wrap</div>
-        <Flex wrap="wrap">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-        </Flex>
-        <WhiteSpace size="lg" />
-
-        <div className="sub-title">Align</div>
-        <Flex justify="center">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-        </Flex>
-        <WhiteSpace />
-        <Flex justify="end">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-        </Flex>
-        <WhiteSpace />
-        <Flex justify="between">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline" />
-        </Flex>
-
-        <WhiteSpace />
-        <Flex align="start">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline small" />
-            <PlaceHolder className="inline" />
-        </Flex>
-        <WhiteSpace />
-        <Flex align="end">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline small" />
-            <PlaceHolder className="inline" />
-        </Flex>
-        <WhiteSpace />
-        <Flex align="baseline">
-            <PlaceHolder className="inline" />
-            <PlaceHolder className="inline small" />
-            <PlaceHolder className="inline" />
-        </Flex>
-    </div>
-);
+import My from './page/home/My';
+import Display from './page/display/Display';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-          <FlexExample />
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedTab: 'appointment',
+            fullScreen: true,
+        };
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <div style={{position: 'fixed', height: '100%', width: '100%', top: 0}}>
+                    <TabBar
+                        unselectedTintColor="#949494"
+                        tintColor="#33A3F4"
+                        barTintColor="white"
+                    >
+                        <TabBar.Item
+                            title="预约"
+                            key="appointment"
+                            icon={<div style={{
+                                width: '22px',
+                                height: '22px',
+                                background: 'url(https://zos.alipayobjects.com/rmsportal/sifuoDUQdAFKAVcFGROC.svg) center center /  21px 21px no-repeat'
+                            }}
+                            />
+                            }
+                            selectedIcon={<div style={{
+                                width: '22px',
+                                height: '22px',
+                                background: 'url(https://zos.alipayobjects.com/rmsportal/iSrlOTqrKddqbOmlvUfq.svg) center center /  21px 21px no-repeat'
+                            }}
+                            />
+                            }
+                            selected={this.state.selectedTab === 'appointment'}
+                            onPress={() => {
+                                this.setState({
+                                    selectedTab: 'appointment',
+                                });
+                            }}
+                            data-seed="logId"
+                        >
+                            <Display/>
+                        </TabBar.Item>
+                        <TabBar.Item
+                            icon={{uri: 'https://zos.alipayobjects.com/rmsportal/asJMfBrNqpMMlVpeInPQ.svg'}}
+                            selectedIcon={{uri: 'https://zos.alipayobjects.com/rmsportal/gjpzzcrPMkhfEqgbYvmN.svg'}}
+                            title="我的"
+                            key="my"
+                            selected={this.state.selectedTab === 'my'}
+                            onPress={() => {
+                                this.setState({
+                                    selectedTab: 'my',
+                                });
+                            }}
+                        >
+                            <My/>
+                        </TabBar.Item>
+                    </TabBar>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;
+

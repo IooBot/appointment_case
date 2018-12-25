@@ -16,6 +16,33 @@ const serverbyprops = `
     }
 `;
 
+const servicebyprops = `
+    query servicebyprops($server_id: ID) {
+      servicebyprops: service_by_props(server_id: $server_id) {
+        id
+        server_id {
+          id
+          name
+          description
+          img
+          createdAt
+          updatedAt
+        }
+        repertory_id {
+          id
+          count
+          createdAt
+          updatedAt
+        }
+        description
+        price
+        startTime
+        lastTime
+      }
+    }
+`;
+
 export {
-    serverbyprops
+    serverbyprops,
+    servicebyprops
 }
