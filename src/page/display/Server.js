@@ -13,7 +13,7 @@ class Server extends Component {
     render() {
         let {tip, servers} = this.props;
         return (
-            <div>
+            <div >
                 <WingBlank>
                     <Carousel
                         autoplay={true}
