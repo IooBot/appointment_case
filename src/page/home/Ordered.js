@@ -34,6 +34,7 @@ class Ordered extends Component {
                             <OrderedRender
                                 orders={orders}
                                 tip={tip}
+                                userID={userID}
                             />
                         )
                     }
@@ -52,7 +53,7 @@ class OrderedRender extends Component {
     }
 
     render() {
-        let {orders, tip} = this.props;
+        let {orders, tip, userID} = this.props;
         return (
             <div>
                 {
@@ -77,6 +78,7 @@ class OrderedRender extends Component {
                                             <CancelButton
                                                 repertoryID={order.service_id.repertory_id.id}
                                                 orderID={order.id}
+                                                userID={userID}
                                             />
                                         </div>
                                     </Card.Body>
@@ -97,7 +99,7 @@ class CancelButton extends Component {
     }
 
     render() {
-        let {repertoryID, orderID} = this.props;
+        let {repertoryID, orderID, userID} = this.props;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -108,10 +110,12 @@ class CancelButton extends Component {
                         if (error) {
                             return 'error!';
                         }
-                        console.log(data);
                         let count = data.repertorybyid.count;
                         return (
-                            <Mutation mutation={gql(updateorderAndupdaterepertory)}>
+                            <Mutation
+                                mutation={gql(updateorderAndupdaterepertory)}
+                                refetchQueries={[{query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}}, {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}}]}
+                            >
                                 {(updateBothTwo, {loading, error}) => {
                                     if (loading)
                                         return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
@@ -124,10 +128,9 @@ class CancelButton extends Component {
                                         orderStatus: 'cancelled',
                                         count: count+1
                                     };
-                                    console.log(varObj);
                                     return (
                                         <Button type='warning' onClick={() => {
-                                            updateBothTwo({variable: varObj})
+                                            updateBothTwo({variables: varObj})
                                         }}>取消</Button>
                                     )
                                 }}

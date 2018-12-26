@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {orderbyprops} from "../../gql";
+import {orderbyprops, updateorder} from "../../gql";
+// import {deleteorder} from "../../gql";
 import {Spin} from 'antd';
 import gql from "graphql-tag";
-import {Query} from "react-apollo";
+import {Query, Mutation} from "react-apollo";
 import {Card, WhiteSpace, Button} from 'antd-mobile';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
@@ -29,12 +30,11 @@ class Cancelled extends Component {
                             tip = '还没有取消的订单'
                         }
 
-                        console.log(orders);
-
                         return (
                             <CancelledRender
                                 orders={orders}
                                 tip={tip}
+                                userID={userID}
                             />
                         )
                     }
@@ -55,7 +55,7 @@ class CancelledRender extends Component {
     }
 
     render() {
-        let {orders, tip} = this.props;
+        let {orders, tip, userID} = this.props;
         return (
             <div>
                 {
@@ -77,7 +77,14 @@ class CancelledRender extends Component {
                                             <div>留言: {order.remark}</div>
                                             <div>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                             <div>取消时间: {moment(Number(order.updatedAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                            <Button type='warning' onClick={()=>{}}>删除</Button>
+                                            {/*<DeleteButton1*/}
+                                                {/*orderID={order.id}*/}
+                                                {/*userID={userID}*/}
+                                            {/*/>*/}
+                                            <DeleteButton2
+                                                orderID={order.id}
+                                                userID={userID}
+                                            />
                                         </div>
                                     </Card.Body>
                                 </Card>
@@ -86,6 +93,82 @@ class CancelledRender extends Component {
                     })
                 }
             </div>
+        )
+    }
+}
+
+// 用户直接删除数据库的按钮
+// class DeleteButton1 extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//
+//         }
+//     }
+//
+//     render() {
+//         let {orderID, userID} = this.props;
+//         return (
+//             <Mutation
+//                 mutation={gql(deleteorder)}
+//                 refetchQueries={[{query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}}]}
+//             >
+//                 {(deleteorder, {loading, error}) => {
+//                     if (loading)
+//                         return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+//                     if (error)
+//                         return 'error';
+//                     let varObj = {
+//                         id: orderID,
+//                         user_id: userID
+//                     };
+//                     return (
+//                         <Button type='warning' onClick={()=>{
+//                             deleteorder({variables: varObj})
+//                         }}>删除</Button>
+//                     )
+//                 }}
+//             </Mutation>
+//
+//         )
+//     }
+// }
+
+// 用户无法直接删除数据库，只是改变订单状态的按钮
+class DeleteButton2 extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+
+        }
+    }
+
+    render() {
+        let {orderID, userID} = this.props;
+        return (
+            <Mutation
+                mutation={gql(updateorder)}
+                refetchQueries={[{query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}}]}
+            >
+                {(updateorder, {loading, error}) => {
+                    if (loading)
+                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                    if (error)
+                        return 'error';
+                    let varObj = {
+                        id: orderID,
+                        user_id: userID,
+                        orderStatus: 'deleted',
+                        updatedAt: new Date().getTime()
+                    };
+                    return (
+                        <Button type='warning' onClick={()=>{
+                            updateorder({variables: varObj})
+                        }}>删除</Button>
+                    )
+                }}
+            </Mutation>
+
         )
     }
 }

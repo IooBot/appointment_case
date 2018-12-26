@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {TabBar} from 'antd-mobile';
+import {Icon} from 'antd';
 import './App.css';
 import My from './page/home/My';
 import Display from './page/display/Display';
+import Manage from "./page/manage/Manage";
 
 class App extends Component {
     constructor(props) {
@@ -19,26 +21,14 @@ class App extends Component {
                 <div style={{position: 'fixed', height: '100%', width: '100%', top: 0}}>
                     <TabBar
                         unselectedTintColor="#949494"
-                        tintColor="#33A3F4"
+                        tintColor="orange"
                         barTintColor="white"
                     >
                         <TabBar.Item
                             title="预约"
                             key="appointment"
-                            icon={<div style={{
-                                width: '22px',
-                                height: '22px',
-                                background: 'url(https://zos.alipayobjects.com/rmsportal/sifuoDUQdAFKAVcFGROC.svg) center center /  21px 21px no-repeat'
-                            }}
-                            />
-                            }
-                            selectedIcon={<div style={{
-                                width: '22px',
-                                height: '22px',
-                                background: 'url(https://zos.alipayobjects.com/rmsportal/iSrlOTqrKddqbOmlvUfq.svg) center center /  21px 21px no-repeat'
-                            }}
-                            />
-                            }
+                            icon={<Icon type="fire" />}
+                            selectedIcon={<Icon type="fire" style={{color: 'orange'}}/>}
                             selected={this.state.selectedTab === 'appointment'}
                             onPress={() => {
                                 this.setState({
@@ -50,8 +40,8 @@ class App extends Component {
                             <Display/>
                         </TabBar.Item>
                         <TabBar.Item
-                            icon={{uri: 'https://zos.alipayobjects.com/rmsportal/asJMfBrNqpMMlVpeInPQ.svg'}}
-                            selectedIcon={{uri: 'https://zos.alipayobjects.com/rmsportal/gjpzzcrPMkhfEqgbYvmN.svg'}}
+                            icon={<Icon type="home" />}
+                            selectedIcon={<Icon type="home" style={{color: 'orange'}}/>}
                             title="我的"
                             key="my"
                             selected={this.state.selectedTab === 'my'}
@@ -62,6 +52,20 @@ class App extends Component {
                             }}
                         >
                             <My/>
+                        </TabBar.Item>
+                        <TabBar.Item
+                            icon={<Icon type="setting" />}
+                            selectedIcon={<Icon type="setting" style={{color: 'orange'}}/>}
+                            title="管理"
+                            key="manage"
+                            selected={this.state.selectedTab === 'manage'}
+                            onPress={() => {
+                                this.setState({
+                                    selectedTab: 'manage',
+                                });
+                            }}
+                        >
+                            <Manage/>
                         </TabBar.Item>
                     </TabBar>
                 </div>

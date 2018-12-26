@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import './index.css';
 import {Tabs, WhiteSpace} from 'antd-mobile';
 import {StickyContainer, Sticky} from 'react-sticky';
-import Ordered from './Ordered';
-import Cancelled from './Cancelled';
-import User from './User';
+import AllOrder from './AllOrder';
+import Release from './Release';
 
 function renderTabBar(props) {
     return (<Sticky>
@@ -12,12 +12,11 @@ function renderTabBar(props) {
 }
 
 const tabs = [
-    {title: '已预约'},
-    {title: '已取消'},
-    {title: '个人信息'},
+    {title: '所有订单'},
+    {title: '发布服务'}
 ];
 
-class My extends Component {
+class Manage extends Component {
     constructor(props) {
         super(props);
         //todo: userID
@@ -36,9 +35,8 @@ class My extends Component {
                               initalPage={'t2'}
                               renderTabBar={renderTabBar}
                         >
-                            <Ordered userID={this.state.userID}/>
-                            <Cancelled userID={this.state.userID}/>
-                            <User userID={this.state.userID}/>
+                            <AllOrder userID={this.state.userID}/>
+                            <Release userID={this.state.userID}/>
                         </Tabs>
                     </StickyContainer>
                     <WhiteSpace/>
@@ -48,4 +46,4 @@ class My extends Component {
     }
 }
 
-export default My;
+export default Manage;

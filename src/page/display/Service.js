@@ -3,9 +3,10 @@ import {NavBar, Icon, WhiteSpace, Card, Button} from 'antd-mobile';
 import CalendarPick from '../component/CalendarPick';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
-import {repertorybyid, createorderAndupdaterepertory} from "../../gql";
+import {repertorybyid, createorderAndupdaterepertory, orderbyprops} from "../../gql";
 import {Spin} from 'antd';
 import gql from "graphql-tag";
+import {idGen} from "../../func";
 import {Query, Mutation} from "react-apollo";
 moment.locale('zh-cn');
 
@@ -60,6 +61,7 @@ class Service extends Component {
                                                         <div>剩余名额: {service.repertory_id.count}</div>
                                                         <OrderButton
                                                             repertoryID={service.repertory_id.id}
+                                                            serviceID={service.id}
                                                         />
                                                     </div>
                                                 </Card.Body>
@@ -75,16 +77,18 @@ class Service extends Component {
     }
 }
 
-export default Service;
-
 class OrderButton extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            // todo: userID
+            userID: 'handsome'
+        }
     }
 
     render() {
-        let {repertoryID} = this.props;
+        let {repertoryID, serviceID} = this.props;
+        let {userID} = this.state;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -95,7 +99,6 @@ class OrderButton extends Component {
                         if (error) {
                             return 'error!';
                         }
-                        console.log(data);
                         let count = data.repertorybyid.count;
                         if(count <= 0) {
                             return (
@@ -103,22 +106,33 @@ class OrderButton extends Component {
                             )
                         } else {
                             return (
-                                <Mutation mutation={gql(createorderAndupdaterepertory)}>
-                                    {(createorderAndupdaterepertory, {loading, error}) => {
+                                <Mutation
+                                    mutation={gql(createorderAndupdaterepertory)}
+                                    refetchQueries={[{query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}}]}
+                                >
+                                    {(iwantu, {loading, error}) => {
                                         if (loading)
                                             return <Spin/>;
                                         if (error)
                                             return 'error';
                                         let varObj = {
-                                            // order_id: orderID,
+                                            user_id: userID,
+                                            service_id: serviceID,
                                             repertory_id: repertoryID,
+                                            order_id: idGen('order'),
+                                            payStatus: '',
+                                            remark: '',
+                                            payCount: '',
+                                            payTime: '',
+                                            customerNumber: 1,
+                                            orderStatus: 'success',
+                                            createdAt: new Date().getTime(),
                                             updatedAt: new Date().getTime(),
-                                            orderStatus: 'cancelled',
-                                            count: count+1
+                                            count: count-1
                                         };
                                         return (
                                             <Button type='primary' onClick={() => {
-                                                createorderAndupdaterepertory({variable: varObj})
+                                                iwantu({variables: varObj})
                                             }}>预约</Button>
                                         )
                                     }}
@@ -133,3 +147,5 @@ class OrderButton extends Component {
         )
     }
 }
+
+export default Service;

@@ -148,7 +148,7 @@ const updateorderAndupdaterepertory = `
 `;
 
 const createorderAndupdaterepertory = `
-    mutation updateorderAndupdaterepertory ($order_id: ID, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
+    mutation updateorderAndupdaterepertory ($order_id: ID!, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
         createorder: create_order(id: $order_id payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
             payStatus
             remark
@@ -181,6 +181,92 @@ const repertorybyid = `
     }
 `;
 
+const deleteorder = `
+    mutation deleteorder($id: ID, $user_id: ID) {
+      deleteorder: delete_order(id: $id user_id: $user_id)
+    }
+`;
+
+const updateorder = `
+    mutation updateorder($updatedAt: String, $orderStatus: String, $id: ID, $user_id: ID) {
+      updateorder: update_order(updatedAt: $updatedAt orderStatus: $orderStatus id: $id user_id: $user_id ) {
+        payStatus
+        remark
+        payCount
+        updatedAt
+        payTime
+        createdAt
+        orderStatus
+        id
+        customerNumber
+      }
+    }
+`;
+
+const adminorderbyprops = `
+    query orderbyprops($orderStatus: String) {
+      orderbyprops: order_by_props(orderStatus: $orderStatus) {
+        payStatus
+        remark
+        payCount
+        updatedAt
+        payTime
+        createdAt
+        orderStatus
+        id
+        user_id {
+          id
+          openid
+          admin
+          username
+          password
+          telephone
+          email
+          createdAt
+          updatedAt
+        }
+        service_id {
+          id
+          description
+          price
+          startTime
+          lastTime
+          createdAt
+          updatedAt
+          repertory_id {
+              id
+              count
+              createdAt
+              updatedAt
+            }
+          server_id {
+              id
+              name
+              description
+              img
+              createdAt
+              updatedAt
+           }
+        }
+        customerNumber
+      }
+    }
+`;
+
+const createserver = `
+    mutation createserver($id: ID!, $name: String, $description: String, $img: String, $createdAt: String, $updatedAt: String) {
+      createserver: create_server(id: $id name: $name description: $description img: $img createdAt: $createdAt updatedAt: $updatedAt) {
+        id
+        name
+        description
+        img
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
+
 export {
     serverbyprops,
     servicebyprops,
@@ -190,4 +276,8 @@ export {
     repertorybyid,
     updateorderAndupdaterepertory,
     createorderAndupdaterepertory,
+    deleteorder,
+    updateorder,
+    adminorderbyprops,
+    createserver,
 }
