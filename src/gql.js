@@ -266,8 +266,37 @@ const createserver = `
     }
 `;
 
+const servicebyid = `
+    query servicebyid($id: ID) {
+      servicebyid: service_by_id(id: $id) {
+        id
+        server_id {
+          id
+          name
+          description
+          img
+          createdAt
+          updatedAt
+        }
+        repertory_id {
+          id
+          count
+          createdAt
+          updatedAt
+        }
+        description
+        price
+        startTime
+        lastTime
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
 
 export {
+    servicebyid,
     serverbyprops,
     servicebyprops,
     orderbyprops,
