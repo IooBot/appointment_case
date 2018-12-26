@@ -147,6 +147,29 @@ const updateorderAndupdaterepertory = `
     }
 `;
 
+const createorderAndupdaterepertory = `
+    mutation updateorderAndupdaterepertory ($order_id: ID, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
+        createorder: create_order(id: $order_id payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+            payStatus
+            remark
+            payCount
+            updatedAt
+            payTime
+            createdAt
+            updatedAt
+            orderStatus
+            id
+            customerNumber
+          }
+      
+          updaterepertory: update_repertory(id: $repertory_id count: $count updatedAt: $updatedAt) {
+            id
+            count
+            updatedAt
+          }
+    }
+`;
+
 const repertorybyid = `
     query repertorybyid($id: ID) {
       repertorybyid: repertory_by_id(id: $id) {
@@ -164,6 +187,7 @@ export {
     orderbyprops,
     userbyid,
     updateuser,
+    repertorybyid,
     updateorderAndupdaterepertory,
-    repertorybyid
+    createorderAndupdaterepertory,
 }

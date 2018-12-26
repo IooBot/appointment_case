@@ -30,8 +30,6 @@ class Ordered extends Component {
                             tip = '还没有订单'
                         }
 
-                        console.log(orders);
-
                         return (
                             <OrderedRender
                                 orders={orders}
@@ -114,22 +112,22 @@ class CancelButton extends Component {
                         let count = data.repertorybyid.count;
                         return (
                             <Mutation mutation={gql(updateorderAndupdaterepertory)}>
-                                {(updateorderAndupdaterepertory, {loading, error}) => {
+                                {(updateBothTwo, {loading, error}) => {
                                     if (loading)
                                         return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
                                     if (error)
                                         return 'error';
+                                    let varObj = {
+                                        order_id: orderID,
+                                        repertory_id: repertoryID,
+                                        updatedAt: new Date().getTime(),
+                                        orderStatus: 'cancelled',
+                                        count: count+1
+                                    };
+                                    console.log(varObj);
                                     return (
                                         <Button type='warning' onClick={() => {
-                                            updateorderAndupdaterepertory({
-                                                variable: {
-                                                    order_id: orderID,
-                                                    repertory_id: repertoryID,
-                                                    updatedAt: new Date().getTime(),
-                                                    orderStatus: 'cancelled',
-                                                    count: count+1
-                                                }
-                                            })
+                                            updateBothTwo({variable: varObj})
                                         }}>取消</Button>
                                     )
                                 }}
