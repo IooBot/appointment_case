@@ -108,7 +108,11 @@ class OrderButton extends Component {
                             return (
                                 <Mutation
                                     mutation={gql(createorderAndupdaterepertory)}
-                                    refetchQueries={[{query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}}]}
+                                    refetchQueries={[
+                                        {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}},
+                                        {query: gql(orderbyprops), variables: {orderStatus: 'success'}},
+                                        {query: gql(orderbyprops), variables: {}}
+                                    ]}
                                 >
                                     {(iwantu, {loading, error}) => {
                                         if (loading)

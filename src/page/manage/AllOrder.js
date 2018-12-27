@@ -136,6 +136,8 @@ class OrderedRender extends Component {
                                             <div>预约: {order.service_id.server_id.name} - {order.service_id.price}元</div>
                                             <div>人数: {order.customerNumber}</div>
                                             <div>留言: {order.remark}</div>
+                                            <div>预约人: {order.user_id.username}</div>
+                                            <div>联系方式: {order.user_id.telephone}</div>
                                             <div>时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                         </div>
                                     </Card.Body>

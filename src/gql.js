@@ -266,8 +266,86 @@ const createserver = `
     }
 `;
 
+const servicebyid = `
+    query servicebyid($id: ID) {
+      servicebyid: service_by_id(id: $id) {
+        id
+        server_id {
+          id
+          name
+          description
+          img
+          createdAt
+          updatedAt
+        }
+        repertory_id {
+          id
+          count
+          createdAt
+          updatedAt
+        }
+        description
+        price
+        startTime
+        lastTime
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
+const updateserviceAndupdaterepertory = `
+    mutation createserviceAndcreaterepertory($service_id: ID, $server_id: ID, $repertory_id: ID!, $count: Int, $description: String, $price: Float, $startTime: String, $lastTime: String, $updatedAt: String) {
+      updateservice: update_service(id: $service_id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime updatedAt: $updatedAt) {
+        id
+        description
+        price
+        startTime
+        lastTime
+        createdAt
+        updatedAt
+      }
+      
+      updaterepertory: update_repertory(id: $repertory_id service_id: $service_id count: $count updatedAt: $updatedAt) {
+        id
+        count
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
+const createserviceAndcreaterepertory = `
+    mutation createserviceAndcreaterepertory($service_id: ID!, $server_id: ID, $repertory_id: ID!, $count: Int, $description: String, $price: Float, $startTime: String, $lastTime: String, $createdAt: String, $updatedAt: String) {
+      createservice: create_service(id: $service_id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime createdAt: $createdAt updatedAt: $updatedAt) {
+        id
+        description
+        price
+        startTime
+        lastTime
+        createdAt
+        updatedAt
+      }
+      
+      createrepertory: create_repertory(id: $repertory_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+        id
+        count
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
+const deleteserviceAnddeleterepertory = `
+    mutation deleteserviceAnddeleterepertory($repertory_id: ID!, $service_id: ID!) {
+      deleterepertory: delete_repertory(id: $repertory_id)
+      
+      deleteservice: delete_service(id: $service_id)
+    }
+`;
 
 export {
+    servicebyid,
     serverbyprops,
     servicebyprops,
     orderbyprops,
@@ -280,4 +358,7 @@ export {
     updateorder,
     adminorderbyprops,
     createserver,
+    updateserviceAndupdaterepertory,
+    createserviceAndcreaterepertory,
+    deleteserviceAnddeleterepertory
 }

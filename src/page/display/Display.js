@@ -57,11 +57,11 @@ class Display extends Component {
                                     }
 
                                     return (
-                                        <Server
-                                            servers={servers}
-                                            tip={tip}
-                                            pageSwitchToService={this.pageSwitchToService}
-                                        />
+                                            <Server
+                                                servers={servers}
+                                                tip={tip}
+                                                pageSwitchToService={this.pageSwitchToService}
+                                            />
                                     )
                                 }
                             }

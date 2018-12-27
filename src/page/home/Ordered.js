@@ -114,7 +114,13 @@ class CancelButton extends Component {
                         return (
                             <Mutation
                                 mutation={gql(updateorderAndupdaterepertory)}
-                                refetchQueries={[{query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}}, {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}}]}
+                                refetchQueries={[
+                                        {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}},
+                                        {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}},
+                                        {query: gql(orderbyprops), variables: {orderStatus: 'success'}},
+                                        {query: gql(orderbyprops), variables: {orderStatus: 'cancelled'}},
+                                        {query: gql(orderbyprops), variables: {}}
+                                    ]}
                             >
                                 {(updateBothTwo, {loading, error}) => {
                                     if (loading)
