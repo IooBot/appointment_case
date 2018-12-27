@@ -198,6 +198,8 @@ class Message extends Component {
                             serviceID={serviceID}
                             telephone={phone}
                             name={name}
+                            remark={remark}
+                            people={people}
                             donotShowOrdering={donotShowOrdering}
                         />
                         :
@@ -207,6 +209,8 @@ class Message extends Component {
                             serviceID={serviceID}
                             telephone={phone}
                             name={name}
+                            remark={remark}
+                            people={people}
                             donotShowOrdering={donotShowOrdering}
                         />
                 }
@@ -224,7 +228,7 @@ class SaveAndOrderButton extends Component {
     }
 
     render() {
-        let {repertoryID, serviceID, userID, telephone, name, donotShowOrdering} = this.props;
+        let {repertoryID, serviceID, userID, telephone, name, donotShowOrdering, remark, people} = this.props;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -288,10 +292,10 @@ class SaveAndOrderButton extends Component {
                                             repertory_id: repertoryID,
                                             order_id: idGen('order'),
                                             payStatus: '',
-                                            remark: '',
+                                            remark,
                                             payCount: '',
                                             payTime: '',
-                                            customerNumber: 1,
+                                            customerNumber: people,
                                             orderStatus: 'success',
                                             createdAt: new Date().getTime(),
                                             updatedAt: new Date().getTime(),
@@ -325,7 +329,7 @@ class OrderButton extends Component {
     }
 
     render() {
-        let {repertoryID, serviceID, userID, telephone, name, donotShowOrdering} = this.props;
+        let {repertoryID, serviceID, userID, telephone, name, donotShowOrdering, remark, people} = this.props;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -365,10 +369,10 @@ class OrderButton extends Component {
                                             repertory_id: repertoryID,
                                             order_id: idGen('order'),
                                             payStatus: '',
-                                            remark: '',
+                                            remark,
                                             payCount: '',
                                             payTime: '',
-                                            customerNumber: 1,
+                                            customerNumber: people,
                                             orderStatus: 'success',
                                             createdAt: new Date().getTime(),
                                             updatedAt: new Date().getTime(),
