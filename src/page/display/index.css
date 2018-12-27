@@ -1,7 +1,65 @@
 .avatar {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   background-repeat: no-repeat;
-  background-size:100% 100%
+  background-size: 100% 100%;
+  border-radius: 50%;
+  border: 3px solid #eee;
+  overflow: hidden
 }
 
+.server-name, .service-description, .order-name {
+  color: black;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.server-description {
+  color: #999999;
+  font-size: smaller;
+}
+
+.card {
+  border: none;
+  border-radius: 4px;
+  box-shadow: 1px 2px 1px 0 #eee;
+}
+
+.service-price, .order-price {
+  color: indianred;
+  font-size: large;
+  font-weight: bold;
+}
+
+.service-price:before, .order-price:before {
+  content: "￥";
+  color: indianred;
+  font-size: small;
+}
+
+.service-time, .order-time {
+  color: dimgrey;
+  font-size: small;
+  font-weight: lighter;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.center-fix {
+  display: -webkit-flex;
+  -webkit-justify-content: center;
+  -webkit-align-items: center;
+  margin-top: 20px;
+}

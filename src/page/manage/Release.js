@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import './index.css';
-import {NoticeBar, List, InputItem, ImagePicker, Button, Stepper, DatePicker} from 'antd-mobile';
+import {NoticeBar, List, InputItem, ImagePicker, Button, Stepper, DatePicker, ActivityIndicator} from 'antd-mobile';
 import {Query, Mutation} from "react-apollo";
-import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {
     servicebyid,
@@ -37,7 +36,13 @@ class Release extends Component {
                     {
                         ({loading, error, data}) => {
                             if (loading) {
-                                return <Spin className={'spin'}/>
+                                return (
+                                    <div className="loading">
+                                        <div className="align">
+                                            <ActivityIndicator text="Loading..." size="large"/>
+                                        </div>
+                                    </div>
+                                );
                             }
                             if (error) {
                                 return 'error!';
@@ -125,7 +130,13 @@ class ServiceList extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="center-fix">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            );
                         }
                         if (error) {
                             return 'error!';
@@ -257,7 +268,13 @@ class SubmitServerButton extends Component {
             >
                 {(createserver, {loading, error}) => {
                     if (loading)
-                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
                     if (error)
                         return 'error';
                     let varObj = {
@@ -293,7 +310,13 @@ class ServiceDetail extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="center-fix">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            );
                         }
                         if (error) {
                             return 'error!';
@@ -476,7 +499,13 @@ class SubmitServiceUpdateButton extends Component {
             >
                 {(updateBothTwo, {loading, error}) => {
                     if (loading)
-                        return <Spin/>;
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
                     if (error)
                         return 'error';
                     let varObj = {
@@ -518,7 +547,13 @@ class SubmitServiceCreateButton extends Component {
             >
                 {(createBothTwo, {loading, error}) => {
                     if (loading)
-                        return <Spin/>;
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
                     if (error)
                         return 'error';
                     let varObj = {
@@ -563,7 +598,13 @@ class SubmitServiceDeleteButton extends Component {
             >
                 {(deleteBothTwo, {loading, error}) => {
                     if (loading)
-                        return <Spin/>;
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
                     if (error)
                         return 'error';
                     let varObj = {

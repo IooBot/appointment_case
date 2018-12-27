@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {userbyid, updateuser} from "../../gql";
-import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
-import {InputItem, Toast, List, Button} from 'antd-mobile';
+import {InputItem, Toast, List, Button, ActivityIndicator} from 'antd-mobile';
 
 class User extends Component {
     render() {
@@ -13,7 +12,13 @@ class User extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -29,7 +34,7 @@ class User extends Component {
                             <div>
                                 {
                                     tip ?
-                                        <div>{tip}</div>
+                                        <div className={'center'}>{tip}</div>
                                         :
                                         ''
                                 }
@@ -127,11 +132,17 @@ class SaveButton extends Component {
             >
                 {(updateuser, {loading, error}) => {
                     if (loading)
-                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
                     if (error)
                         return 'error';
                     return (
-                        <Button type={'primary'} onClick={()=>{
+                        <Button type={'primary'} style={{margin: '5px 10px'}} onClick={()=>{
                             updateuser({
                                 variables: {
                                     id: userID,

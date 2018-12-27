@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, WhiteSpace, Button, Carousel, WingBlank} from 'antd-mobile';
+import {Card, WhiteSpace, Button, Carousel, WingBlank, Flex} from 'antd-mobile';
 
 class Server extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class Server extends Component {
     render() {
         let {tip, servers} = this.props;
         return (
-            <div >
+            <div>
                 <WingBlank>
                     <Carousel
                         autoplay={true}
@@ -42,7 +42,7 @@ class Server extends Component {
 
                 {
                     tip ?
-                        <div>{tip}</div>
+                        <div className={'center'}>{tip}</div>
                         :
                         ''
                 }
@@ -51,20 +51,30 @@ class Server extends Component {
                     servers.map((server) => {
                         return (
                             <div key={server.id}>
-                                <WhiteSpace size="lg"/>
-                                <Card full>
-                                    <Card.Body>
-                                        <div className={'card'}>
-                                            <div className={'avatar'}
-                                                 style={{backgroundImage: `url(${server.img})`}}>1
+                                <WingBlank size="lg">
+                                    <WhiteSpace size="lg"/>
+                                    <Card className={'card'}>
+                                        <Card.Body>
+                                            <div>
+                                                <Flex>
+                                                    <Flex.Item>
+                                                        <div className={'avatar'}
+                                                             style={{backgroundImage: `url(${server.img})`}}>1
+                                                        </div>
+                                                    </Flex.Item>
+                                                    <Flex.Item>
+                                                        <div className={'server-name'}>{server.name}</div>
+                                                        <div className={'server-description'}>{server.description}</div>
+                                                    </Flex.Item>
+                                                    <Flex.Item>
+                                                        <Button type='ghost' size='small'
+                                                                onClick={this.props.pageSwitchToService(server.id)}>选我</Button>
+                                                    </Flex.Item>
+                                                </Flex>
                                             </div>
-                                            <div>{server.name}</div>
-                                            <div>{server.description}</div>
-                                            <Button type='primary'
-                                                    onClick={this.props.pageSwitchToService(server.id)}>选我</Button>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
+                                        </Card.Body>
+                                    </Card>
+                                </WingBlank>
                             </div>
                         )
                     })

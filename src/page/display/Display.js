@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {serverbyprops, servicebyprops} from "../../gql";
-import {Spin} from 'antd';
+import {ActivityIndicator} from 'antd-mobile';
 import gql from "graphql-tag";
 import {Query} from "react-apollo";
 import Server from './Server';
@@ -18,7 +18,7 @@ class Display extends Component {
 
     pageSwitchToService = (serverID) => {
         return () => {
-            this.setState ({
+            this.setState({
                 serverID,
                 display: 'service'
             })
@@ -27,7 +27,7 @@ class Display extends Component {
     };
 
     pageSwitchToServer = () => {
-        this.setState ({
+        this.setState({
             display: 'server',
             serverID: ''
         })
@@ -44,7 +44,13 @@ class Display extends Component {
                             {
                                 ({loading, error, data}) => {
                                     if (loading) {
-                                        return <Spin className={'spin'}/>
+                                        return (
+                                            <div className="loading">
+                                                <div className="align">
+                                                    <ActivityIndicator text="Loading..." size="large"/>
+                                                </div>
+                                            </div>
+                                        )
                                     }
                                     if (error) {
                                         return 'error!';
@@ -58,11 +64,11 @@ class Display extends Component {
                                     }
 
                                     return (
-                                            <Server
-                                                servers={servers}
-                                                tip={tip}
-                                                pageSwitchToService={this.pageSwitchToService}
-                                            />
+                                        <Server
+                                            servers={servers}
+                                            tip={tip}
+                                            pageSwitchToService={this.pageSwitchToService}
+                                        />
                                     )
                                 }
                             }
@@ -72,7 +78,13 @@ class Display extends Component {
                             {
                                 ({loading, error, data}) => {
                                     if (loading) {
-                                        return <Spin className={'spin'}/>
+                                        return (
+                                            <div className="loading">
+                                                <div className="align">
+                                                    <ActivityIndicator text="Loading..." size="large"/>
+                                                </div>
+                                            </div>
+                                        )
                                     }
                                     if (error) {
                                         return 'error!';

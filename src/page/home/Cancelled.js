@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {orderbyprops, updateorder} from "../../gql";
 // import {deleteorder} from "../../gql";
-import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
-import {Card, WhiteSpace, Button} from 'antd-mobile';
+import {Card, WhiteSpace, Button, ActivityIndicator, WingBlank} from 'antd-mobile';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
+import {Row, Col} from 'antd';
 moment.locale('zh-cn');
 
 class Cancelled extends Component {
@@ -17,7 +17,13 @@ class Cancelled extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -49,9 +55,7 @@ export default Cancelled;
 class CancelledRender extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
@@ -60,34 +64,48 @@ class CancelledRender extends Component {
             <div>
                 {
                     tip ?
-                        <div>{tip}</div>
+                        <div className={'center-fix'}>{tip}</div>
                         :
                         ''
                 }
 
                 {
-                    orders.map((order)=> {
+                    orders.map((order) => {
                         return (
                             <div key={order.id}>
-                                <WhiteSpace size="lg"/>
-                                <Card full>
-                                    <Card.Body>
-                                        <div className={'card'}>
-                                            <div>预约: {order.service_id.server_id.name} - {order.service_id.price}元</div>
-                                            <div>留言: {order.remark}</div>
-                                            <div>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                            <div>取消时间: {moment(Number(order.updatedAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                            {/*<DeleteButton1*/}
-                                                {/*orderID={order.id}*/}
-                                                {/*userID={userID}*/}
-                                            {/*/>*/}
-                                            <DeleteButton2
-                                                orderID={order.id}
-                                                userID={userID}
-                                            />
-                                        </div>
-                                    </Card.Body>
-                                </Card>
+                                <WingBlank size="lg">
+                                    <WhiteSpace size="lg"/>
+                                    <Card className={'card'}>
+                                        <Card.Body>
+
+                                            <div>
+                                                <Row>
+                                                    <Col span={14}>
+                                                        <div className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                    </Col>
+                                                    <Col span={6}>
+                                                        <div className={'order-remark'}>留言: {order.remark?order.remark:'无'}</div>
+                                                    </Col>
+                                                    <Col span={4}>
+                                                        {/*<DeleteButton1*/}
+                                                        {/*orderID={order.id}*/}
+                                                        {/*userID={userID}*/}
+                                                        {/*/>*/}
+                                                        <DeleteButton2
+                                                            orderID={order.id}
+                                                            userID={userID}
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <div className={'order-time'}>预约于: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                    <div className={'order-time'}>取消于: {moment(Number(order.updatedAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                </Row>
+                                            </div>
+
+                                        </Card.Body>
+                                    </Card>
+                                </WingBlank>
                             </div>
                         )
                     })
@@ -123,7 +141,7 @@ class CancelledRender extends Component {
 //                         user_id: userID
 //                     };
 //                     return (
-//                         <Button type='warning' onClick={()=>{
+//                         <Button inline size={'small'} type='warning' onClick={()=>{
 //                             deleteorder({variables: varObj})
 //                         }}>删除</Button>
 //                     )
@@ -138,9 +156,7 @@ class CancelledRender extends Component {
 class DeleteButton2 extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
@@ -152,7 +168,13 @@ class DeleteButton2 extends Component {
             >
                 {(updateorder, {loading, error}) => {
                     if (loading)
-                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
                     if (error)
                         return 'error';
                     let varObj = {
@@ -162,7 +184,7 @@ class DeleteButton2 extends Component {
                         updatedAt: new Date().getTime()
                     };
                     return (
-                        <Button type='warning' onClick={()=>{
+                        <Button type='warning' inline size={'small'} onClick={() => {
                             updateorder({variables: varObj})
                         }}>删除</Button>
                     )

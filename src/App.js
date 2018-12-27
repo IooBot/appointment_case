@@ -23,14 +23,14 @@ class App extends Component {
                 <div style={{position: 'fixed', height: '100%', width: '100%', top: 0}}>
                     <TabBar
                         unselectedTintColor="#949494"
-                        tintColor="orange"
+                        tintColor="#328cee"
                         barTintColor="white"
                     >
                         <TabBar.Item
                             title="预约"
                             key="appointment"
                             icon={<Icon type="fire" />}
-                            selectedIcon={<Icon type="fire" style={{color: 'orange'}}/>}
+                            selectedIcon={<Icon type="fire" style={{color: '#328cee'}}/>}
                             selected={this.state.selectedTab === 'appointment'}
                             onPress={() => {
                                 this.setState({
@@ -43,7 +43,7 @@ class App extends Component {
                         </TabBar.Item>
                         <TabBar.Item
                             icon={<Icon type="home" />}
-                            selectedIcon={<Icon type="home" style={{color: 'orange'}}/>}
+                            selectedIcon={<Icon type="home" style={{color: '#328cee'}}/>}
                             title="我的"
                             key="my"
                             selected={this.state.selectedTab === 'my'}
@@ -57,7 +57,7 @@ class App extends Component {
                         </TabBar.Item>
                         <TabBar.Item
                             icon={<Icon type="setting" />}
-                            selectedIcon={<Icon type="setting" style={{color: 'orange'}}/>}
+                            selectedIcon={<Icon type="setting" style={{color: '#328cee'}}/>}
                             title="管理"
                             key="manage"
                             selected={this.state.selectedTab === 'manage'}

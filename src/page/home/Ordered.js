@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {orderbyprops, repertorybyid, updateorderAndupdaterepertory} from "../../gql";
-import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
-import {Card, WhiteSpace, Button} from 'antd-mobile';
+import {Card, WhiteSpace, Button, ActivityIndicator, WingBlank} from 'antd-mobile';
+import {Row, Col} from 'antd';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
 
@@ -17,7 +17,13 @@ class Ordered extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -58,7 +64,7 @@ class OrderedRender extends Component {
             <div>
                 {
                     tip ?
-                        <div>{tip}</div>
+                        <div className={'center-fix'}>{tip}</div>
                         :
                         ''
                 }
@@ -67,22 +73,33 @@ class OrderedRender extends Component {
                     orders.map((order) => {
                         return (
                             <div key={order.id}>
-                                <WhiteSpace size="lg"/>
-                                <Card full>
-                                    <Card.Body>
-                                        <div className={'card'}>
-                                            <div>预约: {order.service_id.server_id.name} - {order.service_id.price}元</div>
-                                            <div>人数: {order.customerNumber}</div>
-                                            <div>留言: {order.remark}</div>
-                                            <div>时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                            <CancelButton
-                                                repertoryID={order.service_id.repertory_id.id}
-                                                orderID={order.id}
-                                                userID={userID}
-                                            />
-                                        </div>
-                                    </Card.Body>
-                                </Card>
+                                <WingBlank size="lg">
+                                    <WhiteSpace size="lg"/>
+                                    <Card className={'card'}>
+                                        <Card.Body>
+                                            <div>
+                                                <Row>
+                                                    <Col span={14}>
+                                                        <div className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                        <div className={'order-price'}>{order.service_id.price}</div>
+                                                        <div className={'order-time'}>{moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                    </Col>
+                                                    <Col span={6}>
+                                                        <div className={'order-people'}>{order.customerNumber}人</div>
+                                                        <div className={'order-remark'}>留言: {order.remark?order.remark:'无'}</div>
+                                                    </Col>
+                                                    <Col span={4}>
+                                                        <CancelButton
+                                                            repertoryID={order.service_id.repertory_id.id}
+                                                            orderID={order.id}
+                                                            userID={userID}
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </WingBlank>
                             </div>
                         )
                     })
@@ -105,7 +122,13 @@ class CancelButton extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -115,16 +138,22 @@ class CancelButton extends Component {
                             <Mutation
                                 mutation={gql(updateorderAndupdaterepertory)}
                                 refetchQueries={[
-                                        {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}},
-                                        {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}},
-                                        {query: gql(orderbyprops), variables: {orderStatus: 'success'}},
-                                        {query: gql(orderbyprops), variables: {orderStatus: 'cancelled'}},
-                                        {query: gql(orderbyprops), variables: {}}
-                                    ]}
+                                    {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'success'}},
+                                    {query: gql(orderbyprops), variables: {user_id: userID, orderStatus: 'cancelled'}},
+                                    {query: gql(orderbyprops), variables: {orderStatus: 'success'}},
+                                    {query: gql(orderbyprops), variables: {orderStatus: 'cancelled'}},
+                                    {query: gql(orderbyprops), variables: {}}
+                                ]}
                             >
                                 {(updateBothTwo, {loading, error}) => {
                                     if (loading)
-                                        return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                                        return (
+                                            <div className="loading">
+                                                <div className="align">
+                                                    <ActivityIndicator text="Loading..." size="large"/>
+                                                </div>
+                                            </div>
+                                        );
                                     if (error)
                                         return 'error';
                                     let varObj = {
@@ -132,10 +161,10 @@ class CancelButton extends Component {
                                         repertory_id: repertoryID,
                                         updatedAt: new Date().getTime(),
                                         orderStatus: 'cancelled',
-                                        count: count+1
+                                        count: count + 1
                                     };
                                     return (
-                                        <Button type='warning' onClick={() => {
+                                        <Button type='warning' inline size={'small'} onClick={() => {
                                             updateBothTwo({variables: varObj})
                                         }}>取消</Button>
                                     )

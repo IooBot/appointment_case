@@ -2,32 +2,32 @@ import React, {Component} from 'react';
 import './index.css';
 import {createForm} from 'rc-form';
 import {NoticeBar, Picker} from 'antd-mobile';
-import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query} from "react-apollo";
 import {adminorderbyprops} from "../../gql";
-import {Card, WhiteSpace} from 'antd-mobile';
+import {Card, WhiteSpace, ActivityIndicator, WingBlank} from 'antd-mobile';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
+import {Row, Col} from 'antd';
 
 moment.locale('zh-cn');
 
 const data = [
     {
         "value": "success",
-        "label": "成功",
+        "label": "成功（可选）",
     },
     {
         "value": "cancelled",
-        "label": "已取消",
+        "label": "已取消（可选）",
     },
     {
         "value": "deleted",
-        "label": "已删除",
+        "label": "已删除（可选）",
     },
     {
         "value": "",
-        "label": "全部",
+        "label": "全部（可选）",
     }
 ];
 
@@ -88,7 +88,13 @@ class AdminShowOrders extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -126,7 +132,7 @@ class OrderedRender extends Component {
             <div>
                 {
                     tip ?
-                        <div>{tip}</div>
+                        <div className={'center'}>{tip}</div>
                         :
                         ''
                 }
@@ -135,21 +141,30 @@ class OrderedRender extends Component {
                     orders.map((order) => {
                         return (
                             <div key={order.id}>
-                                <WhiteSpace size="lg"/>
-                                <Card full>
-                                    <Card.Body>
-                                        <div className={'card'}>
-                                            <div>预约: {order.service_id.server_id.name} - {order.service_id.price}元</div>
-                                            <div>人数: {order.customerNumber}</div>
-                                            <div>留言: {order.remark ? order.remark : '无'}</div>
-                                            <div>预约人: {order.contactName}</div>
-                                            <div>联系方式: {order.contactTelephone}</div>
-                                            <div>预约账号: {order.user_id.username}</div>
-                                            <div>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                            <div>下单时间: {moment(Number(order.createdAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
+                                <WingBlank size="lg">
+                                    <WhiteSpace size="lg"/>
+                                    <Card className={'card'}>
+                                        <Card.Body>
+                                            <div>
+                                                <Row>
+                                                    <Col span={20}>
+                                                        <div className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                    </Col>
+                                                    <Col span={4}>
+                                                        <div className={'order-price'}>{order.service_id.price}</div>
+                                                    </Col>
+                                                </Row>
+                                                    <div>人数: {order.customerNumber}</div>
+                                                    <div className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
+                                                    <div>预约人: {order.contactName}</div>
+                                                    <div>联系方式: {order.contactTelephone}</div>
+                                                    <div>预约账号: {order.user_id.username}</div>
+                                                    <div className={'order-time'}>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                    <div className={'order-time'}>下单时间: {moment(Number(order.createdAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </WingBlank>
                             </div>
                         )
                     })

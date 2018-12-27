@@ -7,10 +7,9 @@ import {
     userbyid,
     createorderAndupdaterepertoryAndupdateuser
 } from "../../gql";
-import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
-import {InputItem, Toast, List, Button, Stepper, Icon, NavBar, Switch} from 'antd-mobile';
+import {InputItem, Toast, List, Button, Stepper, Icon, NavBar, Switch, ActivityIndicator} from 'antd-mobile';
 import {idGen} from "../../func";
 import {createForm} from 'rc-form';
 
@@ -35,7 +34,13 @@ class Ordering extends Component {
                     {
                         ({loading, error, data}) => {
                             if (loading) {
-                                return <Spin className={'spin'}/>
+                                return (
+                                    <div className="loading">
+                                        <div className="align">
+                                            <ActivityIndicator text="Loading..." size="large"/>
+                                        </div>
+                                    </div>
+                                )
                             }
                             if (error) {
                                 return 'error!';
@@ -51,7 +56,7 @@ class Ordering extends Component {
                                 <div>
                                     {
                                         tip ?
-                                            <div>{tip}</div>
+                                            <div className={'center'}>{tip}</div>
                                             :
                                             ''
                                     }
@@ -234,7 +239,13 @@ class SaveAndOrderButton extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -248,7 +259,13 @@ class SaveAndOrderButton extends Component {
                                 >
                                     {(updateuser, {loading, error}) => {
                                         if (loading)
-                                            return <Spin style={{marginLeft: 30, marginTop: 10}}/>;
+                                            return (
+                                                <div className="loading">
+                                                    <div className="align">
+                                                        <ActivityIndicator text="Loading..." size="large"/>
+                                                    </div>
+                                                </div>
+                                            );
                                         if (error)
                                             return 'error';
                                         return (
@@ -283,7 +300,13 @@ class SaveAndOrderButton extends Component {
                                 >
                                     {(iwantu, {loading, error}) => {
                                         if (loading)
-                                            return <Spin/>;
+                                            return (
+                                                <div className="loading">
+                                                    <div className="align">
+                                                        <ActivityIndicator text="Loading..." size="large"/>
+                                                    </div>
+                                                </div>
+                                            );
                                         if (error)
                                             return 'error';
                                         let varObj = {
@@ -335,7 +358,13 @@ class OrderButton extends Component {
                 {
                     ({loading, error, data}) => {
                         if (loading) {
-                            return <Spin className={'spin'}/>
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            )
                         }
                         if (error) {
                             return 'error!';
@@ -343,7 +372,7 @@ class OrderButton extends Component {
                         let count = data.repertorybyid.count;
                         if (count <= 0) {
                             return (
-                                <div>名额已满</div>
+                                <div className={'center'}>名额已满</div>
                             )
                         } else {
                             return (
@@ -360,7 +389,13 @@ class OrderButton extends Component {
                                 >
                                     {(iwantu, {loading, error}) => {
                                         if (loading)
-                                            return <Spin/>;
+                                            return (
+                                                <div className="loading">
+                                                    <div className="align">
+                                                        <ActivityIndicator text="Loading..." size="large"/>
+                                                    </div>
+                                                </div>
+                                            );
                                         if (error)
                                             return 'error';
                                         let varObj = {
@@ -384,7 +419,7 @@ class OrderButton extends Component {
                                             <Button type='primary' onClick={() => {
                                                 iwantu({variables: varObj});
                                                 donotShowOrdering();
-                                            }}>预约</Button>
+                                            }} style={{margin: '5px 10px'}}>预约</Button>
                                         )
                                     }}
                                 </Mutation>
