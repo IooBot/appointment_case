@@ -12,10 +12,12 @@ class App extends Component {
         this.state = {
             selectedTab: 'appointment',
             fullScreen: true,
+            userID: 'handsome'
         };
     }
 
     render() {
+        let {userID} = this.state;
         return (
             <div className="App">
                 <div style={{position: 'fixed', height: '100%', width: '100%', top: 0}}>
@@ -37,7 +39,7 @@ class App extends Component {
                             }}
                             data-seed="logId"
                         >
-                            <Display/>
+                            <Display userID={userID}/>
                         </TabBar.Item>
                         <TabBar.Item
                             icon={<Icon type="home" />}
@@ -51,7 +53,7 @@ class App extends Component {
                                 });
                             }}
                         >
-                            <My/>
+                            <My userID={userID}/>
                         </TabBar.Item>
                         <TabBar.Item
                             icon={<Icon type="setting" />}
@@ -65,7 +67,7 @@ class App extends Component {
                                 });
                             }}
                         >
-                            <Manage/>
+                            <Manage userID={userID}/>
                         </TabBar.Item>
                     </TabBar>
                 </div>

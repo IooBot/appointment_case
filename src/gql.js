@@ -53,11 +53,14 @@ const orderbyprops = `
         createdAt
         orderStatus
         id
+        contactTelephone
+        contactName
         user_id {
           id
           openid
           admin
           username
+          nickname
           password
           telephone
           email
@@ -99,6 +102,7 @@ const userbyid = `
         openid
         admin
         username
+        nickname
         password
         telephone
         email
@@ -109,12 +113,13 @@ const userbyid = `
 `;
 
 const updateuser = `
-    mutation updateuser($id: ID, $username: String, $telephone: String, $updatedAt: String) {
-      updateuser: update_user(id: $id username: $username  telephone: $telephone updatedAt: $updatedAt) {
+    mutation updateuser($id: ID, $nickname: String, $telephone: String, $updatedAt: String) {
+      updateuser: update_user(id: $id nickname: $nickname  telephone: $telephone updatedAt: $updatedAt) {
         id
         openid
         admin
         username
+        nickname
         password
         telephone
         email
@@ -148,8 +153,8 @@ const updateorderAndupdaterepertory = `
 `;
 
 const createorderAndupdaterepertory = `
-    mutation updateorderAndupdaterepertory ($order_id: ID!, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
-        createorder: create_order(id: $order_id payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+    mutation updateorderAndupdaterepertory ($order_id: ID!, $contactTelephone: String, $contactName: String, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
+        createorder: create_order(id: $order_id contactTelephone: $contactTelephone contactName: $contactName payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
             payStatus
             remark
             payCount
@@ -160,6 +165,8 @@ const createorderAndupdaterepertory = `
             orderStatus
             id
             customerNumber
+            contactTelephone
+            contactName
           }
       
           updaterepertory: update_repertory(id: $repertory_id count: $count updatedAt: $updatedAt) {
@@ -167,6 +174,46 @@ const createorderAndupdaterepertory = `
             count
             updatedAt
           }
+    }
+`;
+
+const createorderAndupdaterepertoryAndupdateuser = `
+    mutation createorderAndupdaterepertoryAndupdateuser ($order_id: ID!, $user_id: ID!, $nickname: String, $telephone: String, $contactTelephone: String, $contactName: String, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
+        createorder: create_order(id: $order_id contactTelephone: $contactTelephone contactName: $contactName payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+            payStatus
+            remark
+            payCount
+            updatedAt
+            payTime
+            createdAt
+            updatedAt
+            orderStatus
+            id
+            customerNumber
+            contactTelephone
+            contactName
+          }
+      
+          updaterepertory: update_repertory(id: $repertory_id count: $count updatedAt: $updatedAt) {
+            id
+            count
+            updatedAt
+          }
+          
+          
+        updateuser: update_user(id: $user_id nickname: $contactName  telephone: $contactTelephone updatedAt: $updatedAt) {
+            id
+            openid
+            admin
+            username
+            nickname
+            password
+            telephone
+            email
+            createdAt
+            updatedAt
+        }
+        
     }
 `;
 
@@ -214,11 +261,14 @@ const adminorderbyprops = `
         createdAt
         orderStatus
         id
+        contactTelephone
+        contactName
         user_id {
           id
           openid
           admin
           username
+          nickname
           password
           telephone
           email
@@ -349,6 +399,7 @@ export {
     serverbyprops,
     servicebyprops,
     orderbyprops,
+    adminorderbyprops,
     userbyid,
     updateuser,
     repertorybyid,
@@ -356,9 +407,9 @@ export {
     createorderAndupdaterepertory,
     deleteorder,
     updateorder,
-    adminorderbyprops,
     createserver,
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
-    deleteserviceAnddeleterepertory
+    deleteserviceAnddeleterepertory,
+    createorderAndupdaterepertoryAndupdateuser
 }

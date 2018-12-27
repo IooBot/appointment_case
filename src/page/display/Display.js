@@ -35,6 +35,7 @@ class Display extends Component {
 
 
     render() {
+        let {userID} = this.props;
         return (
             <div>
                 {
@@ -89,6 +90,7 @@ class Display extends Component {
                                             services={services}
                                             tip={tip}
                                             pageSwitchToServer={this.pageSwitchToServer}
+                                            userID={userID}
                                         />
                                     )
                                 }

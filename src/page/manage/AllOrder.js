@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
-import { createForm } from 'rc-form';
-import { NoticeBar,Picker } from 'antd-mobile';
+import {createForm} from 'rc-form';
+import {NoticeBar, Picker} from 'antd-mobile';
 import {Spin} from 'antd';
 import gql from "graphql-tag";
 import {Query} from "react-apollo";
@@ -9,6 +9,7 @@ import {adminorderbyprops} from "../../gql";
 import {Card, WhiteSpace} from 'antd-mobile';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
+
 moment.locale('zh-cn');
 
 const data = [
@@ -33,11 +34,16 @@ const data = [
 const CustomChildren = props => (
     <div
         onClick={props.onClick}
-        style={{ backgroundColor: '#fff', paddingLeft: 15 }}
+        style={{backgroundColor: '#fff', paddingLeft: 15}}
     >
-        <div className="test" style={{ display: 'flex', height: '45px', lineHeight: '45px' }}>
-            <div style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.children}</div>
-            <div style={{ textAlign: 'right', color: '#888', marginRight: 15 }}>{props.extra}</div>
+        <div className="test" style={{display: 'flex', height: '45px', lineHeight: '45px'}}>
+            <div style={{
+                flex: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+            }}>{props.children}</div>
+            <div style={{textAlign: 'right', color: '#888', marginRight: 15}}>{props.extra}</div>
         </div>
     </div>
 );
@@ -52,16 +58,16 @@ class AllOrder extends Component {
     }
 
     render() {
-        const { getFieldProps } = this.props.form;
+        const {getFieldProps} = this.props.form;
         return (
             <div>
-                <NoticeBar mode="closable" marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}>
+                <NoticeBar mode="closable" marqueeProps={{loop: true, style: {padding: '0 7.5px'}}}>
                     只有管理员的微信才能看到此界面，此处作为样例全部展示
                 </NoticeBar>
                 <Picker data={data} cols={1} {...getFieldProps('district3')} className="forss"
                         value={this.state.sValue}
-                        onChange={v => this.setState({ sValue: v })}
-                        onOk={v => this.setState({ sValue: v })}
+                        onChange={v => this.setState({sValue: v})}
+                        onOk={v => this.setState({sValue: v})}
                 >
                     <CustomChildren>选择订单类型</CustomChildren>
                 </Picker>
@@ -78,7 +84,7 @@ class AdminShowOrders extends Component {
     render() {
         let {orderStatus} = this.props;
         return (
-            <Query query={gql(adminorderbyprops)} variables={orderStatus? {orderStatus}: {}}>
+            <Query query={gql(adminorderbyprops)} variables={orderStatus ? {orderStatus} : {}}>
                 {
                     ({loading, error, data}) => {
                         if (loading) {
@@ -135,10 +141,12 @@ class OrderedRender extends Component {
                                         <div className={'card'}>
                                             <div>预约: {order.service_id.server_id.name} - {order.service_id.price}元</div>
                                             <div>人数: {order.customerNumber}</div>
-                                            <div>留言: {order.remark}</div>
-                                            <div>预约人: {order.user_id.username}</div>
-                                            <div>联系方式: {order.user_id.telephone}</div>
-                                            <div>时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                            <div>留言: {order.remark ? order.remark : '无'}</div>
+                                            <div>预约人: {order.contactName}</div>
+                                            <div>联系方式: {order.contactTelephone}</div>
+                                            <div>预约账号: {order.user_id.username}</div>
+                                            <div>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                            <div>下单时间: {moment(Number(order.createdAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                         </div>
                                     </Card.Body>
                                 </Card>

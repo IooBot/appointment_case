@@ -53,7 +53,7 @@ class Message extends Component {
         this.state = {
             hasError: false,
             phone: props.user.telephone,
-            name: props.user.username
+            name: props.user.nickname
         };
     }
 
@@ -136,7 +136,7 @@ class SaveButton extends Component {
                                 variables: {
                                     id: userID,
                                     telephone,
-                                    username:name,
+                                    nickname:name,
                                     updatedAt: new Date().getTime()
                                 }
                             })

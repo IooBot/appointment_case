@@ -19,13 +19,13 @@ const tabs = [
 class Manage extends Component {
     constructor(props) {
         super(props);
-        //todo: userID
         this.state = {
-            userID: 'handsome'
+
         }
     }
 
     render() {
+        let {userID} = this.props;
         return (
             <div>
                 <div>
@@ -35,8 +35,8 @@ class Manage extends Component {
                               initalPage={'t2'}
                               renderTabBar={renderTabBar}
                         >
-                            <AllOrder userID={this.state.userID}/>
-                            <Release userID={this.state.userID}/>
+                            <AllOrder userID={userID}/>
+                            <Release userID={userID}/>
                         </Tabs>
                     </StickyContainer>
                     <WhiteSpace/>

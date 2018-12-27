@@ -20,13 +20,12 @@ const tabs = [
 class My extends Component {
     constructor(props) {
         super(props);
-        //todo: userID
         this.state = {
-            userID: 'handsome'
         }
     }
 
     render() {
+        let {userID} = this.props;
         return (
             <div>
                 <div>
@@ -36,9 +35,9 @@ class My extends Component {
                               initalPage={'t2'}
                               renderTabBar={renderTabBar}
                         >
-                            <Ordered userID={this.state.userID}/>
-                            <Cancelled userID={this.state.userID}/>
-                            <User userID={this.state.userID}/>
+                            <Ordered userID={userID}/>
+                            <Cancelled userID={userID}/>
+                            <User userID={userID}/>
                         </Tabs>
                     </StickyContainer>
                     <WhiteSpace/>
