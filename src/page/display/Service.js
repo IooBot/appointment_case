@@ -82,7 +82,8 @@ class Service extends Component {
                                                                         <Col span={15}>
                                                                             <div className={'service-description'}>{service.description}</div>
                                                                             <div className={'service-time'}>开始: {moment(Number(service.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                                                            <div className={'service-time'}>工作时长: {moment.duration(Number(service.lastTime), "milliseconds").humanize()}</div>
+                                                                            {/*<div className={'service-time'}>工作时长: {moment.duration(Number(service.lastTime), "milliseconds").humanize()}</div>*/}
+                                                                            <div className={'service-time'}>工作时长: {Math.floor(Number(service.lastTime)/3600000)}小时 {Math.floor((Number(service.lastTime)%3600000)/60000)} 分钟</div>
                                                                         </Col>
                                                                         <Col span={5}>
                                                                             <div className={'service-price'}>{service.price}</div>
