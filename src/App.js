@@ -29,7 +29,7 @@ class App extends Component {
                         <TabBar.Item
                             title="预约"
                             key="appointment"
-                            icon={<Icon type="fire" />}
+                            icon={<Icon type="fire"/>}
                             selectedIcon={<Icon type="fire" style={{color: '#328cee'}}/>}
                             selected={this.state.selectedTab === 'appointment'}
                             onPress={() => {
@@ -42,7 +42,7 @@ class App extends Component {
                             <Display userID={userID}/>
                         </TabBar.Item>
                         <TabBar.Item
-                            icon={<Icon type="home" />}
+                            icon={<Icon type="home"/>}
                             selectedIcon={<Icon type="home" style={{color: '#328cee'}}/>}
                             title="我的"
                             key="my"
@@ -56,7 +56,7 @@ class App extends Component {
                             <My userID={userID}/>
                         </TabBar.Item>
                         <TabBar.Item
-                            icon={<Icon type="setting" />}
+                            icon={<Icon type="setting"/>}
                             selectedIcon={<Icon type="setting" style={{color: '#328cee'}}/>}
                             title="管理"
                             key="manage"

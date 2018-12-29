@@ -3,7 +3,8 @@
 
 // const graphqlFC = 'http://localhost:3123/graphql';
 
-const graphqlFC = 'http://123.206.193.98:3123/graphql';
+// const graphqlFC = 'http://123.206.193.98:3123/graphql';
+const graphqlFC = 'http://123.207.170.36:3000/graphql';
 
 
 export {graphqlFC}
