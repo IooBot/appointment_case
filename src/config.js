@@ -4,7 +4,7 @@
 // const graphqlFC = 'http://localhost:3123/graphql';
 
 // const graphqlFC = 'http://123.206.193.98:3123/graphql';
-const graphqlFC = 'http://appointment.ioobot.cn/graphql';
+const graphqlFC = 'http://order.ioobot.cn/graphql';
 
 
 export {graphqlFC}
