@@ -5,6 +5,7 @@ import './App.css';
 import My from './page/home/My';
 import Display from './page/display/Display';
 import Manage from "./page/manage/Manage";
+import {getCookie} from "./cookie";
 
 class App extends Component {
     constructor(props) {
@@ -14,6 +15,15 @@ class App extends Component {
             fullScreen: true,
             userID: 'handsome'
         };
+    }
+
+    componentWillMount(){
+        // setCookie("openid","o2fcFv8x3wy5WtcP116S5GzzkgDQ");
+        let openid =  getCookie("openid");
+        console.log('openid',openid);
+        if (!openid) {
+            window.location.href = "/subscribe";
+        }
     }
 
     render() {

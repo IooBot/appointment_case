@@ -1,3 +1,3 @@
-const graphqlFC = 'https://orderfcdb.szu.im/graphql';
+const graphqlFC = window.location.origin+'/graphql';
 
 export {graphqlFC}
