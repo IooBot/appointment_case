@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 import {Tabs, WhiteSpace} from 'antd-mobile';
 import {StickyContainer, Sticky} from 'react-sticky';
@@ -19,28 +19,25 @@ const tabs = [
 class Manage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
         let {userID} = this.props;
         return (
             <div>
-                <div>
-                    <WhiteSpace/>
-                    <StickyContainer>
-                        <Tabs tabs={tabs}
-                              initalPage={'t2'}
-                              renderTabBar={renderTabBar}
-                        >
-                            <AllOrder userID={userID}/>
-                            <Release userID={userID}/>
-                        </Tabs>
-                    </StickyContainer>
-                    <WhiteSpace/>
-                </div>
+                <WhiteSpace/>
+                <StickyContainer>
+                    <Tabs
+                        tabs={tabs}
+                        initalPage={'t2'}
+                        renderTabBar={renderTabBar}
+                    >
+                        <AllOrder userID={userID}/>
+                        <Release userID={userID}/>
+                    </Tabs>
+                </StickyContainer>
+                <WhiteSpace/>
             </div>
         );
     }

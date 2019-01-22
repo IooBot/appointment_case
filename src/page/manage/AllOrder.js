@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './index.css';
 import {createForm} from 'rc-form';
-import {NoticeBar, Picker} from 'antd-mobile';
+import {Picker} from 'antd-mobile';
 import gql from "graphql-tag";
 import {Query} from "react-apollo";
 import {adminorderbyprops} from "../../gql";
@@ -61,13 +61,14 @@ class AllOrder extends Component {
         const {getFieldProps} = this.props.form;
         return (
             <div>
-                <NoticeBar mode="closable" marqueeProps={{loop: true, style: {padding: '0 7.5px'}}}>
-                    只有管理员的微信才能看到此界面，此处作为样例全部展示
-                </NoticeBar>
-                <Picker data={data} cols={1} {...getFieldProps('district3')} className="forss"
-                        value={this.state.sValue}
-                        onChange={v => this.setState({sValue: v})}
-                        onOk={v => this.setState({sValue: v})}
+                <Picker
+                    data={data}
+                    cols={1}
+                    {...getFieldProps('district3')}
+                    className="forss"
+                    value={this.state.sValue}
+                    onChange={v => this.setState({sValue: v})}
+                    onOk={v => this.setState({sValue: v})}
                 >
                     <CustomChildren>选择订单类型</CustomChildren>
                 </Picker>
@@ -89,10 +90,8 @@ class AdminShowOrders extends Component {
                     ({loading, error, data}) => {
                         if (loading) {
                             return (
-                                <div className="loading">
-                                    <div className="align">
-                                        <ActivityIndicator text="Loading..." size="large"/>
-                                    </div>
+                                <div className="tab-center">
+                                    <ActivityIndicator text="Loading..." size="large"/>
                                 </div>
                             )
                         }
@@ -132,7 +131,7 @@ class OrderedRender extends Component {
             <div>
                 {
                     tip ?
-                        <div className={'center'}>{tip}</div>
+                        <div className={'center-fix'}>{tip}</div>
                         :
                         ''
                 }
@@ -148,19 +147,23 @@ class OrderedRender extends Component {
                                             <div>
                                                 <Row>
                                                     <Col span={20}>
-                                                        <div className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                        <div
+                                                            className={'order-name'}>{order.service_id.server_id.name}</div>
                                                     </Col>
                                                     <Col span={4}>
                                                         <div className={'order-price'}>{order.service_id.price}</div>
                                                     </Col>
                                                 </Row>
-                                                    <div>人数: {order.customerNumber}</div>
-                                                    <div className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
-                                                    <div>预约人: {order.contactName}</div>
-                                                    <div>联系方式: {order.contactTelephone}</div>
-                                                    <div>预约账号: {order.user_id.username}</div>
-                                                    <div className={'order-time'}>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
-                                                    <div className={'order-time'}>下单时间: {moment(Number(order.createdAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                <div>人数: {order.customerNumber}</div>
+                                                <div
+                                                    className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
+                                                <div>预约人: {order.contactName}</div>
+                                                <div>联系方式: {order.contactTelephone}</div>
+                                                <div>预约账号: {order.user_id.username}</div>
+                                                <div
+                                                    className={'order-time'}>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                <div
+                                                    className={'order-time'}>下单时间: {moment(Number(order.createdAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                             </div>
                                         </Card.Body>
                                     </Card>

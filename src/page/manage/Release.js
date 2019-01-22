@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './index.css';
-import {NoticeBar, List, InputItem, ImagePicker, Button, Stepper, DatePicker, ActivityIndicator} from 'antd-mobile';
+import {List, InputItem, ImagePicker, Button, Stepper, DatePicker, ActivityIndicator} from 'antd-mobile';
 import {Query, Mutation} from "react-apollo";
 import gql from "graphql-tag";
 import {
@@ -29,21 +29,18 @@ class Release extends Component {
     render() {
         return (
             <div>
-                <NoticeBar mode="closable" marqueeProps={{loop: true, style: {padding: '0 7.5px'}}}>
-                    只有管理员的微信才能看到此界面，此处作为样例全部展示
-                </NoticeBar>
                 <Query query={gql(serverbyprops)} variables={{}}>
                     {
                         ({loading, error, data}) => {
                             if (loading) {
                                 return (
-                                    <div className="loading">
-                                        <div className="align">
-                                            <ActivityIndicator text="Loading..." size="large"/>
-                                        </div>
+                                    <div className="tab-center">
+                                        <ActivityIndicator text="Loading..." size="large"/>
                                     </div>
                                 );
                             }
+
+
                             if (error) {
                                 return 'error!';
                             }
@@ -582,9 +579,7 @@ class SubmitServiceCreateButton extends Component {
 class SubmitServiceDeleteButton extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
@@ -612,7 +607,7 @@ class SubmitServiceDeleteButton extends Component {
                         repertory_id: repertoryID
                     };
                     return (
-                        <Button size="small" type="warning" inline style={{marginLeft: '10px'}} onClick={()=>{
+                        <Button size="small" type="warning" inline style={{marginLeft: '10px'}} onClick={() => {
                             deleteBothTwo({variables: varObj});
                             donotShowDetail();
                         }}>删除</Button>

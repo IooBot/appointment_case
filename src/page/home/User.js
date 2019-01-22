@@ -13,10 +13,8 @@ class User extends Component {
                     ({loading, error, data}) => {
                         if (loading) {
                             return (
-                                <div className="loading">
-                                    <div className="align">
-                                        <ActivityIndicator text="Loading..." size="large"/>
-                                    </div>
+                                <div className="tab-center">
+                                    <ActivityIndicator text="Loading..." size="large"/>
                                 </div>
                             )
                         }
@@ -120,9 +118,7 @@ class Message extends Component {
 class SaveButton extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
@@ -133,21 +129,19 @@ class SaveButton extends Component {
                 {(updateuser, {loading, error}) => {
                     if (loading)
                         return (
-                            <div className="loading">
-                                <div className="align">
-                                    <ActivityIndicator text="Loading..." size="large"/>
-                                </div>
+                            <div className="tab-center">
+                                <ActivityIndicator text="Loading..." size="large"/>
                             </div>
                         );
                     if (error)
                         return 'error';
                     return (
-                        <Button type={'primary'} style={{margin: '5px 10px'}} onClick={()=>{
+                        <Button type={'primary'} style={{margin: '5px 10px'}} onClick={() => {
                             updateuser({
                                 variables: {
                                     id: userID,
                                     telephone,
-                                    nickname:name,
+                                    nickname: name,
                                     updatedAt: new Date().getTime()
                                 }
                             })

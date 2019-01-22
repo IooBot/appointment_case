@@ -112,6 +112,23 @@ const userbyid = `
     }
 `;
 
+const userbyprops = `
+    query userbyprops($email: String, $updatedAt: String, $admin: String, $password: String, $telephone: String, $nickname: String, $username: String, $createdAt: String, $openid: String) {
+      userbyprops: user_by_props(email: $email updatedAt: $updatedAt admin: $admin password: $password telephone: $telephone nickname: $nickname username: $username createdAt: $createdAt openid: $openid) {
+        email
+        updatedAt
+        admin
+        password
+        telephone
+        nickname
+        username
+        createdAt
+        openid
+        id
+      }
+    }
+`;
+
 const updateuser = `
     mutation updateuser($id: ID, $nickname: String, $telephone: String, $updatedAt: String) {
       updateuser: update_user(id: $id nickname: $nickname  telephone: $telephone updatedAt: $updatedAt) {
@@ -128,6 +145,22 @@ const updateuser = `
       }
     }
 
+`;
+const createuser = `
+    mutation createuser($email: String, $updatedAt: String, $admin: String, $password: String, $telephone: String, $nickname: String, $username: String, $createdAt: String, $openid: String, $id: ID!) {
+      createuser: create_user(email: $email updatedAt: $updatedAt admin: $admin password: $password telephone: $telephone nickname: $nickname username: $username createdAt: $createdAt openid: $openid id: $id) {
+        email
+        updatedAt
+        admin
+        password
+        telephone
+        nickname
+        username
+        createdAt
+        openid
+        id
+      }
+    }
 `;
 
 const updateorderAndupdaterepertory = `
@@ -401,7 +434,9 @@ export {
     orderbyprops,
     adminorderbyprops,
     userbyid,
+    userbyprops,
     updateuser,
+    createuser,
     repertorybyid,
     updateorderAndupdaterepertory,
     createorderAndupdaterepertory,

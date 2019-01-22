@@ -18,10 +18,8 @@ class Ordered extends Component {
                     ({loading, error, data}) => {
                         if (loading) {
                             return (
-                                <div className="loading">
-                                    <div className="align">
-                                        <ActivityIndicator text="Loading..." size="large"/>
-                                    </div>
+                                <div className="tab-center">
+                                    <ActivityIndicator text="Loading..." size="large"/>
                                 </div>
                             )
                         }
@@ -80,13 +78,16 @@ class OrderedRender extends Component {
                                             <div>
                                                 <Row>
                                                     <Col span={14}>
-                                                        <div className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                        <div
+                                                            className={'order-name'}>{order.service_id.server_id.name}</div>
                                                         <div className={'order-price'}>{order.service_id.price}</div>
-                                                        <div className={'order-time'}>{moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                        <div
+                                                            className={'order-time'}>{moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                                     </Col>
                                                     <Col span={6}>
                                                         <div className={'order-people'}>{order.customerNumber}人</div>
-                                                        <div className={'order-remark'}>留言: {order.remark?order.remark:'无'}</div>
+                                                        <div
+                                                            className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
                                                     </Col>
                                                     <Col span={4}>
                                                         <CancelButton
@@ -123,10 +124,8 @@ class CancelButton extends Component {
                     ({loading, error, data}) => {
                         if (loading) {
                             return (
-                                <div className="loading">
-                                    <div className="align">
-                                        <ActivityIndicator text="Loading..." size="large"/>
-                                    </div>
+                                <div className="tab-center">
+                                    <ActivityIndicator text="Loading..." size="large"/>
                                 </div>
                             )
                         }
