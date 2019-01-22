@@ -43,6 +43,9 @@
 .tab-center {
   height: 100px;
   display: flex;
+  display: -webkit-flex;
   align-items: center;
+  -webkit-justify-content: center;
   justify-content: center;
+  -webkit-align-items: center;
 }

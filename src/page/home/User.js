@@ -56,7 +56,8 @@ class Message extends Component {
         this.state = {
             hasError: false,
             phone: props.user.telephone,
-            name: props.user.nickname
+            name: props.user.nickname,
+            userID: props.user.id
         };
     }
 
@@ -106,7 +107,7 @@ class Message extends Component {
                     >手机号码</InputItem>
                 </List>
                 <SaveButton
-                    userID={this.props.userID}
+                    userID={this.state.userID}
                     telephone={this.state.phone}
                     name={this.state.name}
                 />
@@ -137,6 +138,7 @@ class SaveButton extends Component {
                         return 'error';
                     return (
                         <Button type={'primary'} style={{margin: '5px 10px'}} onClick={() => {
+                            console.log(1);
                             updateuser({
                                 variables: {
                                     id: userID,
