@@ -61,6 +61,7 @@ class AllOrder extends Component {
         const {getFieldProps} = this.props.form;
         return (
             <div>
+                <WhiteSpace/>
                 <Picker
                     data={data}
                     cols={1}
@@ -90,8 +91,10 @@ class AdminShowOrders extends Component {
                     ({loading, error, data}) => {
                         if (loading) {
                             return (
-                                <div className="tab-center">
-                                    <ActivityIndicator text="Loading..." size="large"/>
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
                                 </div>
                             )
                         }
@@ -148,10 +151,10 @@ class OrderedRender extends Component {
                                                 <Row>
                                                     <Col span={20}>
                                                         <div
-                                                            className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                            className={'order-name'}>{order.serverName}</div>
                                                     </Col>
                                                     <Col span={4}>
-                                                        <div className={'order-price'}>{order.service_id.price}</div>
+                                                        <div className={'order-price'}>{order.servicePrice}</div>
                                                     </Col>
                                                 </Row>
                                                 <div>人数: {order.customerNumber}</div>
@@ -159,9 +162,9 @@ class OrderedRender extends Component {
                                                     className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
                                                 <div>预约人: {order.contactName}</div>
                                                 <div>联系方式: {order.contactTelephone}</div>
-                                                <div>预约账号: {order.user_id.username}</div>
+                                                <div>预约账号: {order.user_id.username? order.user_id.username: '用户通过微信登录'}</div>
                                                 <div
-                                                    className={'order-time'}>预约时间: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                    className={'order-time'}>预约时间: {moment(Number(order.serviceStartTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                                 <div
                                                     className={'order-time'}>下单时间: {moment(Number(order.createdAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                             </div>

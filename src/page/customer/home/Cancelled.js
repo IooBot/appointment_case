@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {orderbyprops, updateorder} from "../../gql";
+import {orderbyprops, updateorder} from "../../../gql";
 // import {deleteorder} from "../../gql";
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
@@ -80,12 +80,10 @@ class CancelledRender extends Component {
                                             <div>
                                                 <Row>
                                                     <Col span={14}>
-                                                        <div
-                                                            className={'order-name'}>{order.service_id.server_id.name}</div>
+                                                        <div className={'order-name'}>{order.serverName}</div>
                                                     </Col>
                                                     <Col span={6}>
-                                                        <div
-                                                            className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
+                                                        <div className={'order-remark'}>留言: {order.remark ? order.remark : '无'}</div>
                                                     </Col>
                                                     <Col span={4}>
                                                         {/*<DeleteButton1*/}
@@ -100,7 +98,7 @@ class CancelledRender extends Component {
                                                 </Row>
                                                 <Row>
                                                     <div
-                                                        className={'order-time'}>预约于: {moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                        className={'order-time'}>预约于: {moment(Number(order.serviceStartTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                                     <div
                                                         className={'order-time'}>取消于: {moment(Number(order.updatedAt)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                                 </Row>

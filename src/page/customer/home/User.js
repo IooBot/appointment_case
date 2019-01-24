@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {userbyid, updateuser} from "../../gql";
+import {userbyid, updateuser} from "../../../gql";
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
 import {InputItem, Toast, List, Button, ActivityIndicator} from 'antd-mobile';

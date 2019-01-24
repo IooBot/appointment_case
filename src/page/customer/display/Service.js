@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {NavBar, Icon, WhiteSpace, Card, Button, WingBlank} from 'antd-mobile';
-import CalendarPick from '../component/CalendarPick';
+import CalendarPick from '../../component/CalendarPick';
 import moment from 'moment';
 import 'moment/locale/zh-cn'
 import Ordering from './Ordering';
@@ -14,7 +14,10 @@ class Service extends Component {
         this.state = {
             pick: false,
             ordering: false,
-            serviceID: '',
+            servicePrice: '',
+            serviceDescription: '',
+            serviceStartTime: '',
+            serviceLastTime: '',
             repertoryID: ''
         }
     }
@@ -26,8 +29,8 @@ class Service extends Component {
     };
 
     render() {
-        let {pageSwitchToServer, tip, services, userID} = this.props;
-        let {serviceID, repertoryID} = this.state;
+        let {pageSwitchToServer, tip, services, userID, serverName, serverDescription} = this.props;
+        let {repertoryID, servicePrice, serviceDescription, serviceStartTime, serviceLastTime} = this.state;
         return (
             <div>
                 {
@@ -38,11 +41,6 @@ class Service extends Component {
                             mode="light"
                             icon={<Icon type="left"/>}
                             onLeftClick={pageSwitchToServer}
-                            // rightContent={[
-                            //     <Icon key="1" type="search" onClick={() => {
-                            //         this.setState({pick: true})
-                            //     }}/>,
-                            // ]}
                         >服务详情</NavBar>
                 }
 
@@ -55,8 +53,13 @@ class Service extends Component {
                             this.state.ordering ?
                                 <Ordering
                                     donotShowOrdering={this.donotShowOrdering}
-                                    serviceID={serviceID}
+                                    servicePrice={servicePrice}
+                                    serviceDescription={serviceDescription}
+                                    serviceStartTime={serviceStartTime}
+                                    serviceLastTime={serviceLastTime}
                                     repertoryID={repertoryID}
+                                    serverName={serverName}
+                                    serverDescription={serverDescription}
                                     userID={userID}
                                 />
                                 :
@@ -93,7 +96,10 @@ class Service extends Component {
                                                                             <Button inline size="small" type='primary' onClick={() => {
                                                                                 this.setState({
                                                                                     ordering: true,
-                                                                                    serviceID: service.id,
+                                                                                    servicePrice: service.price,
+                                                                                    serviceDescription: service.description,
+                                                                                    serviceStartTime: service.startTime,
+                                                                                    serviceLastTime: service.lastTime,
                                                                                     repertoryID: service.repertory_id.id
                                                                                 })
                                                                             }}>预约</Button>

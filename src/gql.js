@@ -67,30 +67,16 @@ const orderbyprops = `
           createdAt
           updatedAt
         }
-        service_id {
-          id
-          description
-          price
-          startTime
-          lastTime
-          createdAt
-          updatedAt
-          repertory_id {
-              id
-              count
-              createdAt
-              updatedAt
-            }
-          server_id {
-              id
-              name
-              description
-              img
-              createdAt
-              updatedAt
-           }
-        }
+        serverName
+        serverDescription
+        servicePrice
+        serviceDescription
+        serviceStartTime
+        serviceLastTime
         customerNumber
+        repertory_id {
+            id
+        }
       }
     }
 `;
@@ -128,6 +114,19 @@ const userbyprops = `
       }
     }
 `;
+
+const userbypropsNum = `
+    query userbyprops($createdAt: String) {
+      userbyprops: user_by_props(createdAt: $createdAt) {
+        createdAt
+      }
+    }
+`;
+
+
+const deleteuser = `mutation deleteuser($id: ID) {
+    deleteuser: delete_user(id: $id)
+}`;
 
 const updateuser = `
     mutation updateuser($id: ID, $nickname: String, $telephone: String, $updatedAt: String) {
@@ -186,8 +185,8 @@ const updateorderAndupdaterepertory = `
 `;
 
 const createorderAndupdaterepertory = `
-    mutation updateorderAndupdaterepertory ($order_id: ID!, $contactTelephone: String, $contactName: String, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
-        createorder: create_order(id: $order_id contactTelephone: $contactTelephone contactName: $contactName payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+    mutation updateorderAndupdaterepertory ($serverName: String, $serverDescription: String, $servicePrice: Float, $serviceDescription: String, $serviceStartTime: String, $serviceLastTime: String, $order_id: ID!, $contactTelephone: String, $contactName: String, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
+        createorder: create_order(repertory_id: $repertory_id serverName: $serverName serverDescription: $serverDescription servicePrice: $servicePrice serviceDescription: $serviceDescription serviceLastTime: $serviceLastTime serviceStartTime: $serviceStartTime id: $order_id contactTelephone: $contactTelephone contactName: $contactName payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id customerNumber: $customerNumber) {
             payStatus
             remark
             payCount
@@ -200,6 +199,15 @@ const createorderAndupdaterepertory = `
             customerNumber
             contactTelephone
             contactName
+            serverName
+            serverDescription
+            servicePrice
+            serviceDescription
+            serviceStartTime
+            serviceLastTime
+            repertory_id {
+                id
+            }
           }
       
           updaterepertory: update_repertory(id: $repertory_id count: $count updatedAt: $updatedAt) {
@@ -211,8 +219,8 @@ const createorderAndupdaterepertory = `
 `;
 
 const createorderAndupdaterepertoryAndupdateuser = `
-    mutation createorderAndupdaterepertoryAndupdateuser ($order_id: ID!, $user_id: ID!, $nickname: String, $telephone: String, $contactTelephone: String, $contactName: String, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
-        createorder: create_order(id: $order_id contactTelephone: $contactTelephone contactName: $contactName payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+    mutation createorderAndupdaterepertoryAndupdateuser ($serverName: String, $serverDescription: String, $servicePrice: Float, $serviceDescription: String, $serviceStartTime: String, $serviceLastTime: String, $order_id: ID!, $user_id: ID!, $nickname: String, $telephone: String, $contactTelephone: String, $contactName: String, $payStatus: String, $remark: String, $payCount: String, $payTime: String, $createdAt: String, $orderStatus: String, $user_id: ID, $customerNumber: Int, $repertory_id: ID, $updatedAt: String, $count: Int) {
+        createorder: create_order(repertory_id: $repertory_id serverName: $serverName serverDescription: $serverDescription servicePrice: $servicePrice serviceDescription: $serviceDescription serviceLastTime: $serviceLastTime serviceStartTime: $serviceStartTime id: $order_id contactTelephone: $contactTelephone contactName: $contactName payStatus: $payStatus remark: $remark payCount: $payCount createdAt: $createdAt updatedAt: $updatedAt payTime: $payTime createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id customerNumber: $customerNumber) {
             payStatus
             remark
             payCount
@@ -225,6 +233,15 @@ const createorderAndupdaterepertoryAndupdateuser = `
             customerNumber
             contactTelephone
             contactName
+            serverName
+            serverDescription
+            servicePrice
+            serviceDescription
+            serviceStartTime
+            serviceLastTime
+            repertory_id {
+                id
+            }
           }
       
           updaterepertory: update_repertory(id: $repertory_id count: $count updatedAt: $updatedAt) {
@@ -308,30 +325,16 @@ const adminorderbyprops = `
           createdAt
           updatedAt
         }
-        service_id {
-          id
-          description
-          price
-          startTime
-          lastTime
-          createdAt
-          updatedAt
-          repertory_id {
-              id
-              count
-              createdAt
-              updatedAt
-            }
-          server_id {
-              id
-              name
-              description
-              img
-              createdAt
-              updatedAt
-           }
-        }
+        serverName
+        serverDescription
+        servicePrice
+        serviceDescription
+        serviceStartTime
+        serviceLastTime
         customerNumber
+        repertory_id {
+            id
+        }
       }
     }
 `;
@@ -348,6 +351,10 @@ const createserver = `
       }
     }
 `;
+
+const deleteserver = `mutation deleteserver($id: ID) {
+    deleteserver: delete_server(id: $id)
+}`;
 
 const servicebyid = `
     query servicebyid($id: ID) {
@@ -378,7 +385,7 @@ const servicebyid = `
 `;
 
 const updateserviceAndupdaterepertory = `
-    mutation createserviceAndcreaterepertory($service_id: ID, $server_id: ID, $repertory_id: ID!, $count: Int, $description: String, $price: Float, $startTime: String, $lastTime: String, $updatedAt: String) {
+    mutation updateserviceAndupdaterepertory($service_id: ID, $server_id: ID, $repertory_id: ID!, $count: Int, $description: String, $price: Float, $startTime: String, $lastTime: String, $updatedAt: String) {
       updateservice: update_service(id: $service_id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime updatedAt: $updatedAt) {
         id
         description
@@ -410,7 +417,7 @@ const createserviceAndcreaterepertory = `
         updatedAt
       }
       
-      createrepertory: create_repertory(id: $repertory_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+      createrepertory: create_repertory(id: $repertory_id server_id: $server_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
         id
         count
         createdAt
@@ -427,6 +434,53 @@ const deleteserviceAnddeleterepertory = `
     }
 `;
 
+const deleteserveranddeleteserviceAnddeleterepertory = `
+    mutation deleteserviceAnddeleterepertory($server_id: ID!) {
+      deleterepertory: delete_repertory(server_id: $server_id)
+      deleteservice: delete_service(server_id: $server_id)
+      deleteserver: delete_server(id: $server_id)
+    }
+`;
+
+const storebyprops = `query storebyprops($name: String, $description: String, $address: String, $alert: String) {
+    storebyprops: store_by_props(name: $name description: $description address: $address alert: $alert) {
+        id
+        name
+        description
+        address
+        alert
+        slideshow
+    }
+}`;
+
+const createstore = `
+    mutation createstore($id: ID!, $slideshow: String, $name: String, $description: String, $address: String, $alert: String, $createdAt: String, $updatedAt: String) {
+      createstore: create_store(id: $id slideshow: $slideshow name: $name description: $description address: $address alert: $alert createdAt: $createdAt updatedAt: $updatedAt) {
+        id
+        name
+        description
+        address
+        alert
+        slideshow
+        createdAt
+        updatedAt
+      }
+    }
+`;
+
+const updatestore = `
+    mutation updatestore($id: ID, $slideshow: String, $name: String, $description: String, $address: String, $alert: String, $updatedAt: String) {
+      updatestore: update_store(id: $id slideshow: $slideshow name: $name description: $description address: $address alert: $alert updatedAt: $updatedAt) {
+        name
+        description
+        address
+        alert
+        slideshow
+        updatedAt
+      }
+    }
+`;
+
 export {
     servicebyid,
     serverbyprops,
@@ -435,8 +489,11 @@ export {
     adminorderbyprops,
     userbyid,
     userbyprops,
+    userbypropsNum,
+    deleteuser,
     updateuser,
     createuser,
+    deleteserver,
     repertorybyid,
     updateorderAndupdaterepertory,
     createorderAndupdaterepertory,
@@ -446,5 +503,9 @@ export {
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
     deleteserviceAnddeleterepertory,
-    createorderAndupdaterepertoryAndupdateuser
+    deleteserveranddeleteserviceAnddeleterepertory,
+    createorderAndupdaterepertoryAndupdateuser,
+    storebyprops,
+    createstore,
+    updatestore
 }

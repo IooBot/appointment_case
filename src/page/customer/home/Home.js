@@ -17,7 +17,7 @@ const tabs = [
     {title: '个人信息'},
 ];
 
-class My extends Component {
+class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -47,4 +47,4 @@ class My extends Component {
     }
 }
 
-export default My;
+export default Home;

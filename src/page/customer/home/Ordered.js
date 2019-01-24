@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {orderbyprops, repertorybyid, updateorderAndupdaterepertory} from "../../gql";
+import {orderbyprops, repertorybyid, updateorderAndupdaterepertory} from "../../../gql";
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
 import {Card, WhiteSpace, Button, ActivityIndicator, WingBlank} from 'antd-mobile';
@@ -33,6 +33,8 @@ class Ordered extends Component {
                             orders = [];
                             tip = '还没有订单'
                         }
+
+                        console.log(orders);
 
                         return (
                             <OrderedRender
@@ -79,10 +81,9 @@ class OrderedRender extends Component {
                                                 <Row>
                                                     <Col span={14}>
                                                         <div
-                                                            className={'order-name'}>{order.service_id.server_id.name}</div>
-                                                        <div className={'order-price'}>{order.service_id.price}</div>
-                                                        <div
-                                                            className={'order-time'}>{moment(Number(order.service_id.startTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
+                                                            className={'order-name'}>{order.serverName}</div>
+                                                        <div className={'order-price'}>{order.servicePrice}</div>
+                                                        <div className={'order-time'}>{moment(Number(order.serviceStartTime)).format("YYYY-MM-DD HH:mm:ss")}</div>
                                                     </Col>
                                                     <Col span={6}>
                                                         <div className={'order-people'}>{order.customerNumber}人</div>
@@ -91,7 +92,7 @@ class OrderedRender extends Component {
                                                     </Col>
                                                     <Col span={4}>
                                                         <CancelButton
-                                                            repertoryID={order.service_id.repertory_id.id}
+                                                            repertoryID={order.repertory_id.id}
                                                             orderID={order.id}
                                                             userID={userID}
                                                         />

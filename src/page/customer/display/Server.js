@@ -68,7 +68,7 @@ class Server extends Component {
                                                     </Flex.Item>
                                                     <Flex.Item>
                                                         <Button type='ghost' size='small'
-                                                                onClick={this.props.pageSwitchToService(server.id)}>选我</Button>
+                                                                onClick={this.props.pageSwitchToService(server.id, server.name, server.description)}>选我</Button>
                                                     </Flex.Item>
                                                 </Flex>
                                             </div>

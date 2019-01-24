@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {serverbyprops, servicebyprops} from "../../gql";
+import {serverbyprops, servicebyprops} from "../../../gql";
 import {ActivityIndicator} from 'antd-mobile';
 import gql from "graphql-tag";
 import {Query} from "react-apollo";
@@ -12,30 +12,36 @@ class Display extends Component {
         super(props);
         this.state = {
             display: 'server',
-            serverID: ''
+            serverID: '',
+            serverName: '',
+            serverDescription: ''
         }
     }
 
-    pageSwitchToService = (serverID) => {
+    pageSwitchToService = (serverID, serverName, serverDescription) => {
         return () => {
             this.setState({
                 serverID,
+                serverName,
+                serverDescription,
                 display: 'service'
             })
-
         }
     };
 
     pageSwitchToServer = () => {
         this.setState({
             display: 'server',
-            serverID: ''
+            serverID: '',
+            serverName: '',
+            serverDescription: ''
         })
     };
 
 
     render() {
         let {userID} = this.props;
+        let {serverID, serverName, serverDescription} = this.state;
         return (
             <div>
                 {
@@ -74,7 +80,7 @@ class Display extends Component {
                             }
                         </Query>
                         :
-                        <Query query={gql(servicebyprops)} variables={{server_id: this.state.serverID}}>
+                        <Query query={gql(servicebyprops)} variables={{server_id: serverID}}>
                             {
                                 ({loading, error, data}) => {
                                     if (loading) {
@@ -103,6 +109,8 @@ class Display extends Component {
                                             tip={tip}
                                             pageSwitchToServer={this.pageSwitchToServer}
                                             userID={userID}
+                                            serverName={serverName}
+                                            serverDescription={serverDescription}
                                         />
                                     )
                                 }
