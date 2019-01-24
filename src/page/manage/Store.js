@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import './index.css';
 import {WhiteSpace, List, ActivityIndicator, Modal, ImagePicker, InputItem, Button} from 'antd-mobile';
-import {deleteuser, userbyprops, storebyprops, createstore, updatestore} from "../../gql";
+import {updateuser, userbyprops, storebyprops, createstore, updatestore} from "../../gql";
 import {Query, Mutation} from "react-apollo";
 import gql from "graphql-tag";
+import {Message} from '../customer/home/User';
 
 const alert = Modal.alert;
 const Item = List.Item;
+const prompt = Modal.prompt;
 
 class Store extends Component {
     constructor(props) {
@@ -20,6 +22,7 @@ class Store extends Component {
             <div>
                 <WhiteSpace/>
                 <StoreDetailFetch/>
+                <WhiteSpace/>
                 <ManagePeople userID={userID}/>
             </div>
         );
@@ -27,107 +30,6 @@ class Store extends Component {
 }
 
 export default Store;
-
-class ManagePeople extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
-
-    render() {
-        let {userID} = this.props;
-        return (
-            <Query query={gql(userbyprops)} variables={{}}>
-                {
-                    ({loading, error, data}) => {
-                        if (loading) {
-                            return (
-                                <div className="loading">
-                                    <div className="align">
-                                        <ActivityIndicator text="Loading..." size="large"/>
-                                    </div>
-                                </div>
-                            );
-                        }
-
-                        if (error) {
-                            return 'error!';
-                        }
-
-                        let admins = data.userbyprops.filter(user => user.admin === 'true');
-
-                        return (
-                            <List renderHeader={() => '管理员人员'} className="my-list">
-                                {
-                                    admins.map((user, index) =>
-                                        <Mutation
-                                            mutation={gql(deleteuser)}
-                                            refetchQueries={[
-                                                {query: gql(userbyprops), variables: {}},
-                                            ]}
-                                            key={user.id}
-                                        >
-                                            {(deleteuser, {loading, error}) => {
-                                                if (loading)
-                                                    return (
-                                                        <div className="loading">
-                                                            <div className="align">
-                                                                <ActivityIndicator text="Loading..." size="large"/>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                if (error)
-                                                    return 'error';
-                                                return (
-                                                    <Item
-                                                        key={user.id}
-                                                        arrow="horizontal"
-                                                        multipleLine
-                                                        onClick={() => {
-                                                            if (user.id === userID) {
-                                                                alert('该账号为此登录账号', '无法执行删除操作', [
-                                                                    {
-                                                                        text: '好的',
-                                                                        onPress: () => console.log('cancel'),
-                                                                        style: 'default'
-                                                                    }
-                                                                ]);
-                                                            } else {
-                                                                alert('删除该管理员', '确认删除吗', [
-                                                                    {
-                                                                        text: '取消',
-                                                                        onPress: () => console.log('cancel'),
-                                                                        style: 'default'
-                                                                    },
-                                                                    {
-                                                                        text: '确定', onPress: () => {
-                                                                            deleteuser({variables: {id: user.id}})
-                                                                        }
-                                                                    },
-                                                                ]);
-                                                            }
-                                                        }}
-                                                    >
-                                                        {
-                                                            (user.nickname || user.telephone) ?
-                                                                `${index + 1}. ${user.nickname}：${user.telephone}`
-                                                                :
-                                                                `${index + 1}. 请该管理员设置用户名及其联系方式`
-                                                        }
-                                                    </Item>
-                                                )
-                                            }}
-                                        </Mutation>
-                                    )
-                                }
-                            </List>
-                        )
-                    }
-                }
-            </Query>
-        )
-    }
-}
 
 class StoreDetailFetch extends Component {
     constructor(props) {
@@ -196,15 +98,14 @@ class StoreDetailRender extends Component {
             address: props.address,
             alert: props.alert,
             slideshow: props.slideshow,
-            newStore: props.newStore
         }
     }
 
-    // componentWillReceiveProps(next) {
-    //     this.setState({
-    //         newStore: next.newStore
-    //     })
-    // }
+    componentWillReceiveProps(next) {
+        this.setState({
+            newStore: next.newStore
+        })
+    }
 
     onReset = () => {
         this.setState({
@@ -224,7 +125,8 @@ class StoreDetailRender extends Component {
     };
 
     render() {
-        let {files, name, description, address, alert, slideshow, newStore} = this.state;
+        let {files, name, description, address, alert, slideshow} = this.state;
+        let {newStore} = this.props;
         return (
             <List renderHeader={() => '店铺个性化管理'} className="my-list">
                 <InputItem onChange={(e) => {
@@ -360,6 +262,179 @@ class CreateStoreButton extends Component {
                     )
                 }}
             </Mutation>
+        )
+    }
+}
+
+class ManagePeople extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: false
+        }
+    }
+
+    render() {
+        let {userID} = this.props;
+        return (
+            <Query query={gql(userbyprops)} variables={{}}>
+                {
+                    ({loading, error, data}) => {
+                        if (loading) {
+                            return (
+                                <div className="loading">
+                                    <div className="align">
+                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        if (error) {
+                            return 'error!';
+                        }
+
+                        let admins = data.userbyprops.filter(user => user.admin === 'true');
+                        let me = admins.find(user => user.id === userID);
+                        let meIndex = admins.findIndex(user => user.id === userID);
+                        admins.splice(meIndex, 1);
+
+                        return (
+                            <List renderHeader={() => '管理员成员'} className="my-list">
+                                <div className={'my-list-subtitle'}>我</div>
+                                <Item
+                                    arrow="horizontal"
+                                    multipleLine
+                                    onClick={() => {
+                                        this.setState({
+                                            modal: true
+                                        })
+                                    }}
+                                >
+                                    点击设置我的信息
+                                </Item>
+                                <Modal
+                                    visible={this.state.modal}
+                                    transparent
+                                    maskClosable={true}
+                                    closable={true}
+                                    title="设置你的联系方式"
+                                    onClose={()=>{
+                                        this.setState({
+                                            modal: false
+                                        })
+                                    }}
+                                >
+                                    <Message user={me}/>
+                                </Modal>
+                                <div className={'my-list-subtitle'}>其他管理员</div>
+                                {
+                                    admins.map((user, index) =>
+                                        <Mutation
+                                            mutation={gql(updateuser)}
+                                            refetchQueries={[
+                                                {query: gql(userbyprops), variables: {}},
+                                            ]}
+                                            key={user.id}
+                                        >
+                                            {(updateuser, {loading, error}) => {
+                                                if (loading)
+                                                    return (
+                                                        <div className="loading">
+                                                            <div className="align">
+                                                                <ActivityIndicator text="Loading..." size="large"/>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                if (error)
+                                                    return 'error';
+                                                return (
+                                                    <div>
+                                                        <Item
+                                                            key={user.id}
+                                                            arrow="horizontal"
+                                                            multipleLine
+                                                            onClick={() => {
+                                                                alert('取消该管理员', '取消后作为普通用户存在', [
+                                                                    {
+                                                                        text: '取消',
+                                                                        onPress: () => console.log('cancel'),
+                                                                        style: 'default'
+                                                                    },
+                                                                    {
+                                                                        text: '确定', onPress: () => {
+                                                                            updateuser({
+                                                                                variables: {
+                                                                                    id: user.id,
+                                                                                    admin: 'false'
+                                                                                }
+                                                                            })
+                                                                        }
+                                                                    },
+                                                                ]);
+                                                            }}
+                                                        >
+                                                            {
+                                                                (user.nickname || user.telephone) ?
+                                                                    `${index + 1}. ${user.nickname}：${user.telephone}`
+                                                                    :
+                                                                    `${index + 1}. 请通知该管理员设置姓名和号码`
+                                                            }
+                                                        </Item>
+                                                    </div>
+                                                )
+                                            }}
+                                        </Mutation>
+                                    )
+                                }
+
+                                <Mutation
+                                    mutation={gql(updateuser)}
+                                    refetchQueries={[
+                                        {query: gql(userbyprops), variables: {}},
+                                    ]}
+                                >
+                                    {(updateuser, {loading, error}) => {
+                                        if (loading)
+                                            return (
+                                                <div className="loading">
+                                                    <div className="align">
+                                                        <ActivityIndicator text="Loading..." size="large"/>
+                                                    </div>
+                                                </div>
+                                            );
+                                        if (error)
+                                            return 'error';
+                                        return (
+                                            <Item
+                                                arrow="horizontal"
+                                                multipleLine
+                                                onClick={() => prompt(
+                                                    '输入用户识别码',
+                                                    '可在 "我的-个人信息-更多资料" 里点击复制',
+                                                    [
+                                                        {text: '取消'},
+                                                        {
+                                                            text: '确认',
+                                                            onPress: userUIDShow => {
+                                                                let userID = 'user_' + userUIDShow.replace('&&', '_');
+                                                                updateuser({variables: {id: userID, admin: 'true'}})
+                                                            }
+                                                        },
+                                                    ],
+                                                    'default',
+                                                )}
+                                            >
+                                                添加管理员
+                                            </Item>
+                                        )
+                                    }}
+                                </Mutation>
+                            </List>
+                        )
+                    }
+                }
+            </Query>
         )
     }
 }

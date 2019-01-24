@@ -23,8 +23,10 @@ class App extends Component {
         // 本地开发
         // 管理员
         setCookie('openid', 'o2fcFvxE5nCQSb4BBHaB4kXcikSE');
-        // 用户
+        // 我
         // setCookie('openid', 'o2fcFv6Rh2-4rCh3d5_1uCWCT5Yc');
+        // 用户
+        // setCookie('openid', 'o2fcFv-h_CFKkNdEYgNkNp0Jt5TA');
 
         // 微信版
         // let openid = getCookie("openid");

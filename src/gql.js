@@ -129,22 +129,22 @@ const deleteuser = `mutation deleteuser($id: ID) {
 }`;
 
 const updateuser = `
-    mutation updateuser($id: ID, $nickname: String, $telephone: String, $updatedAt: String) {
-      updateuser: update_user(id: $id nickname: $nickname  telephone: $telephone updatedAt: $updatedAt) {
-        id
-        openid
+    mutation updateuser($email: String, $updatedAt: String, $admin: String, $password: String, $telephone: String, $nickname: String, $username: String, $createdAt: String, $openid: String, $id: ID) {
+      updateuser: update_user(email: $email updatedAt: $updatedAt admin: $admin password: $password telephone: $telephone nickname: $nickname username: $username createdAt: $createdAt openid: $openid id: $id) {
+        email
+        updatedAt
         admin
-        username
-        nickname
         password
         telephone
-        email
+        nickname
+        username
         createdAt
-        updatedAt
+        openid
+        id
       }
     }
-
 `;
+
 const createuser = `
     mutation createuser($email: String, $updatedAt: String, $admin: String, $password: String, $telephone: String, $nickname: String, $username: String, $createdAt: String, $openid: String, $id: ID!) {
       createuser: create_user(email: $email updatedAt: $updatedAt admin: $admin password: $password telephone: $telephone nickname: $nickname username: $username createdAt: $createdAt openid: $openid id: $id) {

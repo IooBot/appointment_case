@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 import {Query} from "react-apollo";
 import Server from './Server';
 import Service from './Service';
+import TopBar from './TopBar';
 import './index.css'
 
 class Display extends Component {
@@ -46,39 +47,42 @@ class Display extends Component {
             <div>
                 {
                     this.state.display === 'server' ?
-                        <Query query={gql(serverbyprops)} variables={{}}>
-                            {
-                                ({loading, error, data}) => {
-                                    if (loading) {
-                                        return (
-                                            <div className="loading">
-                                                <div className="align">
-                                                    <ActivityIndicator text="Loading..." size="large"/>
+                        <div>
+                            <TopBar/>
+                            <Query query={gql(serverbyprops)} variables={{}}>
+                                {
+                                    ({loading, error, data}) => {
+                                        if (loading) {
+                                            return (
+                                                <div className="loading">
+                                                    <div className="align">
+                                                        <ActivityIndicator text="Loading..." size="large"/>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )
+                                        }
+                                        if (error) {
+                                            return 'error!';
+                                        }
+
+                                        let servers = data.serverbyprops;
+                                        let tip = '';
+                                        if (servers.length === 0) {
+                                            servers = [];
+                                            tip = '还没有服务'
+                                        }
+
+                                        return (
+                                            <Server
+                                                servers={servers}
+                                                tip={tip}
+                                                pageSwitchToService={this.pageSwitchToService}
+                                            />
                                         )
                                     }
-                                    if (error) {
-                                        return 'error!';
-                                    }
-
-                                    let servers = data.serverbyprops;
-                                    let tip = '';
-                                    if (servers.length === 0) {
-                                        servers = [];
-                                        tip = '还没有服务'
-                                    }
-
-                                    return (
-                                        <Server
-                                            servers={servers}
-                                            tip={tip}
-                                            pageSwitchToService={this.pageSwitchToService}
-                                        />
-                                    )
                                 }
-                            }
-                        </Query>
+                            </Query>
+                        </div>
                         :
                         <Query query={gql(servicebyprops)} variables={{server_id: serverID}}>
                             {
