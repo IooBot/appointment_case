@@ -13,7 +13,10 @@ import {
     deleteserviceAnddeleterepertory
 } from "../../gql";
 import {idGen} from "../../func";
+import axios from 'axios';
+import {storeFile} from "../../config";
 
+axios.defaults.withCredentials = true;
 const Item = List.Item;
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
@@ -201,7 +204,8 @@ class AddServer extends Component {
         this.state = {
             files: [],
             name: '',
-            description: ''
+            description: '',
+            imgData:{}
         }
     }
 
@@ -209,19 +213,34 @@ class AddServer extends Component {
         this.setState({
             files: [],
             name: '',
-            description: ''
+            description: '',
+            imgData:{}
         })
     };
 
-    onChange = (files, type) => {
-        console.log(files, type);
+    onChange = (files, operationType) => {
+        // console.log("files",files, "operationType",operationType);
+
+        let base64Cont = files[0].url.split(',')[1];
+        let imgType = files[0].file.type.split('/')[1];
+        let imgNewName = `${Date.now()}.${imgType}`;
+
+        const imgData = {
+            'file-name': `appointment/images/${imgNewName}`,
+            'bucket': 'case',
+            'cont': base64Cont,
+            'public': true,
+            'format': 'base64'
+        };
+
         this.setState({
             files,
+            imgData
         });
     };
 
     render() {
-        const {files, name, description} = this.state;
+        const {files, name, description,imgData} = this.state;
         return (
             <List renderHeader={() => '请输入服务信息'}>
                 <InputItem onChange={(e) => {
@@ -240,6 +259,7 @@ class AddServer extends Component {
                 <Item>
                     <SubmitServerButton
                         img={files[0] ? files[0].url : ''}
+                        imgData={imgData}
                         name={name}
                         description={description}
                     />
@@ -255,6 +275,19 @@ class SubmitServerButton extends Component {
         super(props);
         this.state = {}
     }
+
+    uploadImg = () => {
+        let {imgData} = this.props;
+        console.log("imgData",imgData);
+
+        axios({
+            url:storeFile,
+            method:'post',
+            data: imgData
+        }).then((res)=>{
+            console.log("upload image to cos res",res);
+        });
+    };
 
     render() {
         let {name, description, img} = this.props;
@@ -274,6 +307,7 @@ class SubmitServerButton extends Component {
                         );
                     if (error)
                         return 'error';
+
                     let varObj = {
                         id: idGen('server'),
                         name,
@@ -284,6 +318,7 @@ class SubmitServerButton extends Component {
                     };
                     return (
                         <Button type="primary" size="small" inline onClick={() => {
+                            this.uploadImg();
                             createserver({variables: varObj})
                         }}>提交</Button>
                     )
