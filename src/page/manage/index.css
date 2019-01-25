@@ -49,3 +49,8 @@
   justify-content: center;
   -webkit-align-items: center;
 }
+
+.my-list-subtitle {
+  margin-left: 9px;
+  padding-top: 6px;
+}

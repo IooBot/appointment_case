@@ -1,44 +1,71 @@
 import React, {Component} from 'react';
 import './index.css';
-import {Tabs, WhiteSpace} from 'antd-mobile';
-import {StickyContainer, Sticky} from 'react-sticky';
 import AllOrder from './AllOrder';
 import Release from './Release';
-
-function renderTabBar(props) {
-    return (<Sticky>
-        {({style}) => <div style={{...style, zIndex: 1}}><Tabs.DefaultTabBar {...props} /></div>}
-    </Sticky>);
-}
-
-const tabs = [
-    {title: '所有订单'},
-    {title: '发布服务'}
-];
+import Store from './Store';
+import {TabBar} from 'antd-mobile';
+import {Icon} from 'antd';
 
 class Manage extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            selectedTab: 'orderManage'
+        }
     }
 
     render() {
         let {userID} = this.props;
+        let {selectedTab} = this.state;
         return (
-            <div>
-                <WhiteSpace/>
-                <StickyContainer>
-                    <Tabs
-                        tabs={tabs}
-                        initalPage={'t2'}
-                        renderTabBar={renderTabBar}
-                    >
-                        <AllOrder userID={userID}/>
-                        <Release userID={userID}/>
-                    </Tabs>
-                </StickyContainer>
-                <WhiteSpace/>
-            </div>
+            <TabBar
+                unselectedTintColor="#949494"
+                tintColor="#328cee"
+                barTintColor="white"
+            >
+                <TabBar.Item
+                    icon={<Icon type="shopping-cart"/>}
+                    selectedIcon={<Icon type="shopping-cart" style={{color: '#328cee'}}/>}
+                    title="订单管理"
+                    key="orderManage"
+                    selected={selectedTab === 'orderManage'}
+                    onPress={() => {
+                        this.setState({
+                            selectedTab: 'orderManage',
+                        });
+                    }}
+                >
+                    <AllOrder userID={userID}/>
+                </TabBar.Item>
+                <TabBar.Item
+                    icon={<Icon type="team"/>}
+                    selectedIcon={<Icon type="team" style={{color: '#328cee'}}/>}
+                    title="服务管理"
+                    key="serverManage"
+                    selected={selectedTab === 'serverManage'}
+                    onPress={() => {
+                        this.setState({
+                            selectedTab: 'serverManage',
+                        });
+                    }}
+                >
+                    <Release userID={userID}/>
+                </TabBar.Item>
+                <TabBar.Item
+                    icon={<Icon type="home"/>}
+                    selectedIcon={<Icon type="home" style={{color: '#328cee'}}/>}
+                    title="店铺管理"
+                    key="storeManage"
+                    selected={selectedTab === 'storeManage'}
+                    onPress={() => {
+                        this.setState({
+                            selectedTab: 'storeManage',
+                        });
+                    }}
+                >
+                    <Store userID={userID}/>
+                </TabBar.Item>
+            </TabBar>
         );
     }
 }

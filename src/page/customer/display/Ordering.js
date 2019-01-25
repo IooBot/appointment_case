@@ -6,11 +6,11 @@ import {
     updateuser,
     userbyid,
     createorderAndupdaterepertoryAndupdateuser
-} from "../../gql";
+} from "../../../gql";
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
 import {InputItem, Toast, List, Button, Stepper, Icon, NavBar, Switch, ActivityIndicator} from 'antd-mobile';
-import {idGen} from "../../func";
+import {idGen} from "../../../func";
 import {createForm} from 'rc-form';
 
 const Item = List.Item;
@@ -22,7 +22,7 @@ class Ordering extends Component {
     }
 
     render() {
-        let {repertoryID, serviceID, donotShowOrdering, userID} = this.props;
+        let {repertoryID, donotShowOrdering, userID, serverName, serverDescription, servicePrice, serviceDescription, serviceStartTime, serviceLastTime} = this.props;
         return (
             <div>
                 <NavBar
@@ -64,7 +64,12 @@ class Ordering extends Component {
                                         user={user}
                                         userID={user.id}
                                         repertoryID={repertoryID}
-                                        serviceID={serviceID}
+                                        serverName={serverName}
+                                        serverDescription={serverDescription}
+                                        servicePrice={servicePrice}
+                                        serviceDescription={serviceDescription}
+                                        serviceStartTime={serviceStartTime}
+                                        serviceLastTime={serviceLastTime}
                                         donotShowOrdering={donotShowOrdering}
                                     />
                                 </div>
@@ -129,7 +134,7 @@ class Message extends Component {
 
     render() {
         let {defaultName, defaultPhone, hasError, name, phone, people, remark, tempName, tempPhone} = this.state;
-        let {repertoryID, serviceID, userID, donotShowOrdering} = this.props;
+        let {repertoryID, userID, donotShowOrdering, serverName, serverDescription, servicePrice, serviceDescription, serviceStartTime, serviceLastTime} = this.props;
         const {getFieldProps} = this.props.form;
         return (
             <form>
@@ -200,7 +205,12 @@ class Message extends Component {
                         <OrderButton
                             userID={userID}
                             repertoryID={repertoryID}
-                            serviceID={serviceID}
+                            serverName={serverName}
+                            serverDescription={serverDescription}
+                            servicePrice={servicePrice}
+                            serviceDescription={serviceDescription}
+                            serviceStartTime={serviceStartTime}
+                            serviceLastTime={serviceLastTime}
                             telephone={phone}
                             name={name}
                             remark={remark}
@@ -211,7 +221,12 @@ class Message extends Component {
                         <SaveAndOrderButton
                             userID={userID}
                             repertoryID={repertoryID}
-                            serviceID={serviceID}
+                            serverName={serverName}
+                            serverDescription={serverDescription}
+                            servicePrice={servicePrice}
+                            serviceDescription={serviceDescription}
+                            serviceStartTime={serviceStartTime}
+                            serviceLastTime={serviceLastTime}
                             telephone={phone}
                             name={name}
                             remark={remark}
@@ -233,7 +248,7 @@ class SaveAndOrderButton extends Component {
     }
 
     render() {
-        let {repertoryID, serviceID, userID, telephone, name, donotShowOrdering, remark, people} = this.props;
+        let {repertoryID, userID, telephone, name, donotShowOrdering, remark, people, serverName, serverDescription, servicePrice, serviceDescription, serviceStartTime, serviceLastTime} = this.props;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -311,7 +326,6 @@ class SaveAndOrderButton extends Component {
                                             return 'error';
                                         let varObj = {
                                             user_id: userID,
-                                            service_id: serviceID,
                                             repertory_id: repertoryID,
                                             order_id: idGen('order'),
                                             payStatus: '',
@@ -324,7 +338,13 @@ class SaveAndOrderButton extends Component {
                                             updatedAt: new Date().getTime(),
                                             count: count - 1,
                                             contactTelephone: telephone,
-                                            contactName: name
+                                            contactName: name,
+                                            serverName,
+                                            serverDescription,
+                                            servicePrice,
+                                            serviceDescription,
+                                            serviceStartTime,
+                                            serviceLastTime
                                         };
                                         return (
                                             <Button type='primary' onClick={() => {
@@ -352,7 +372,7 @@ class OrderButton extends Component {
     }
 
     render() {
-        let {repertoryID, serviceID, userID, telephone, name, donotShowOrdering, remark, people} = this.props;
+        let {repertoryID, userID, telephone, name, donotShowOrdering, remark, people, serverName, serverDescription, servicePrice, serviceDescription, serviceStartTime, serviceLastTime} = this.props;
         return (
             <Query query={gql(repertorybyid)} variables={{id: repertoryID}}>
                 {
@@ -400,7 +420,6 @@ class OrderButton extends Component {
                                             return 'error';
                                         let varObj = {
                                             user_id: userID,
-                                            service_id: serviceID,
                                             repertory_id: repertoryID,
                                             order_id: idGen('order'),
                                             payStatus: '',
@@ -413,7 +432,13 @@ class OrderButton extends Component {
                                             updatedAt: new Date().getTime(),
                                             count: count - 1,
                                             contactTelephone: telephone,
-                                            contactName: name
+                                            contactName: name,
+                                            serverName,
+                                            serverDescription,
+                                            servicePrice,
+                                            serviceDescription,
+                                            serviceStartTime,
+                                            serviceLastTime
                                         };
                                         return (
                                             <Button type='primary' onClick={() => {

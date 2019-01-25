@@ -1,6 +1,16 @@
 import React, {Component} from 'react';
 import './index.css';
-import {List, InputItem, ImagePicker, Button, Stepper, DatePicker, ActivityIndicator} from 'antd-mobile';
+import {
+    List,
+    InputItem,
+    ImagePicker,
+    Button,
+    Stepper,
+    DatePicker,
+    ActivityIndicator,
+    WhiteSpace,
+    Modal
+} from 'antd-mobile';
 import {Query, Mutation} from "react-apollo";
 import gql from "graphql-tag";
 import {
@@ -8,6 +18,7 @@ import {
     serverbyprops,
     servicebyprops,
     createserver,
+    deleteserveranddeleteserviceAnddeleterepertory,
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
     deleteserviceAnddeleterepertory
@@ -20,6 +31,7 @@ axios.defaults.withCredentials = true;
 const Item = List.Item;
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
+const alert = Modal.alert;
 
 class Release extends Component {
     constructor(props) {
@@ -29,16 +41,25 @@ class Release extends Component {
         }
     }
 
+    dontShowMe = () => {
+        this.setState({
+            serverID: ''
+        })
+    };
+
     render() {
         return (
             <div>
+                <WhiteSpace/>
                 <Query query={gql(serverbyprops)} variables={{}}>
                     {
                         ({loading, error, data}) => {
                             if (loading) {
                                 return (
-                                    <div className="tab-center">
-                                        <ActivityIndicator text="Loading..." size="large"/>
+                                    <div className="loading">
+                                        <div className="align">
+                                            <ActivityIndicator text="Loading..." size="large"/>
+                                        </div>
                                     </div>
                                 );
                             }
@@ -89,7 +110,7 @@ class Release extends Component {
                                             <AddServer/>
                                             :
                                             this.state.serverID ?
-                                                <ServiceList serverID={this.state.serverID}/>
+                                                <ServiceList serverID={this.state.serverID} dontShowMe={this.dontShowMe}/>
                                                 :
                                                 ''
                                     }
@@ -124,7 +145,7 @@ class ServiceList extends Component {
     };
 
     render() {
-        let {serverID} = this.props;
+        let {serverID, dontShowMe} = this.props;
         return (
             <Query query={gql(servicebyprops)} variables={{server_id: serverID}}>
                 {
@@ -175,6 +196,53 @@ class ServiceList extends Component {
                                                 '没有服务项，点我添加' : '添加'
                                         }
                                     </Item>
+
+                                    <Mutation
+                                        mutation={gql(deleteserveranddeleteserviceAnddeleterepertory)}
+                                        refetchQueries={[
+                                            {query: gql(serverbyprops), variables: {}},
+                                            {query: gql(servicebyprops), variables: {server_id: serverID}}
+                                        ]}
+                                        onCompleted={()=>{
+                                            dontShowMe()
+                                        }}
+                                    >
+                                        {(deleteEvery, {loading, error}) => {
+                                            if (loading)
+                                                return (
+                                                    <div className="loading">
+                                                        <div className="align">
+                                                            <ActivityIndicator text="Loading..." size="large"/>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            if (error)
+                                                return 'error';
+                                            return (
+                                                <Item
+                                                    arrow="horizontal"
+                                                    multipleLine
+                                                    onClick={() => {
+                                                        alert('删除服务', '服务及其服务项会被一并删除', [
+                                                            {
+                                                                text: '取消',
+                                                                onPress: () => console.log('cancel'),
+                                                                style: 'default'
+                                                            },
+                                                            {
+                                                                text: '确定', onPress: () => {
+                                                                    deleteEvery({variables: {server_id: serverID}})
+                                                                }
+                                                            },
+                                                        ]);
+                                                    }}
+                                                >
+                                                    <span style={{color: 'red'}}>删除该服务</span>
+                                                </Item>
+                                            )
+                                        }}
+                                    </Mutation>
+
                                 </List>
 
                                 {
@@ -249,6 +317,7 @@ class AddServer extends Component {
                 <InputItem onChange={(e) => {
                     this.setState({description: e})
                 }} value={description} placeholder="请输入简介">简介</InputItem>
+                <div className={'my-list-subtitle'}>添加图片</div>
                 <ImagePicker
                     files={files}
                     onChange={this.onChange}

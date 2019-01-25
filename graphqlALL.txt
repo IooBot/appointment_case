@@ -1,3 +1,16 @@
+query storebyid($id: ID) {
+  storebyid: store_by_id(id: $id) {
+    id
+    name
+    description
+    address
+    alert
+    slideshow
+    createdAt
+    updatedAt
+  }
+}
+
 query userbyid($id: ID) {
   userbyid: user_by_id(id: $id) {
     email
@@ -10,6 +23,19 @@ query userbyid($id: ID) {
     createdAt
     openid
     id
+  }
+}
+
+query storebyprops($name: String, $description: String, $address: String, $alert: String, $createdAt: String, $updatedAt: String) {
+  storebyprops: store_by_props(name: $name description: $description address: $address alert: $alert createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    name
+    description
+    address
+    alert
+    slideshow
+    createdAt
+    updatedAt
   }
 }
 
@@ -37,6 +63,8 @@ query servicebyid($id: ID) {
     }
     repertory_id {
       id
+
+
       count
       createdAt
       updatedAt
@@ -53,8 +81,18 @@ query servicebyid($id: ID) {
 query repertorybyid($id: ID) {
   repertorybyid: repertory_by_id(id: $id) {
     id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
     service_id {
       id
+
+
       description
       price
       startTime
@@ -73,13 +111,26 @@ query orderbyid($id: ID) {
     payStatus
     contactName
     remark
+    serviceStartTime
     payCount
     updatedAt
     payTime
     contactTelephone
+    serviceLastTime
     createdAt
+    repertory_id {
+      id
+
+
+      count
+      createdAt
+      updatedAt
+    }
     orderStatus
+    serverName
     id
+    serviceDescription
+    serverDescription
     user_id {
       email
       updatedAt
@@ -92,24 +143,26 @@ query orderbyid($id: ID) {
       openid
       id
     }
-    service_id {
-      id
-      description
-      price
-      startTime
-      lastTime
-      createdAt
-      updatedAt
-    }
+    servicePrice
     customerNumber
   }
 }
 
-query repertorybyprops($service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
-  repertorybyprops: repertory_by_props(service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+query repertorybyprops($server_id: ID, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  repertorybyprops: repertory_by_props(server_id: $server_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
     id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
     service_id {
       id
+
+
       description
       price
       startTime
@@ -136,6 +189,8 @@ query servicebyprops($server_id: ID, $repertory_id: ID, $description: String, $p
     }
     repertory_id {
       id
+
+
       count
       createdAt
       updatedAt
@@ -175,18 +230,31 @@ query userbyprops($email: String, $updatedAt: String, $admin: String, $password:
   }
 }
 
-query orderbyprops($payStatus: String, $contactName: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $createdAt: String, $orderStatus: String, $user_id: ID, $service_id: ID, $customerNumber: Int) {
-  orderbyprops: order_by_props(payStatus: $payStatus contactName: $contactName remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone createdAt: $createdAt orderStatus: $orderStatus user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+query orderbyprops($payStatus: String, $contactName: String, $remark: String, $serviceStartTime: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $serviceLastTime: String, $createdAt: String, $repertory_id: ID, $orderStatus: String, $serverName: String, $serviceDescription: String, $serverDescription: String, $user_id: ID, $servicePrice: Float, $customerNumber: Int) {
+  orderbyprops: order_by_props(payStatus: $payStatus contactName: $contactName remark: $remark serviceStartTime: $serviceStartTime payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone serviceLastTime: $serviceLastTime createdAt: $createdAt repertory_id: $repertory_id orderStatus: $orderStatus serverName: $serverName serviceDescription: $serviceDescription serverDescription: $serverDescription user_id: $user_id servicePrice: $servicePrice customerNumber: $customerNumber) {
     payStatus
     contactName
     remark
+    serviceStartTime
     payCount
     updatedAt
     payTime
     contactTelephone
+    serviceLastTime
     createdAt
+    repertory_id {
+      id
+
+
+      count
+      createdAt
+      updatedAt
+    }
     orderStatus
+    serverName
     id
+    serviceDescription
+    serverDescription
     user_id {
       email
       updatedAt
@@ -199,15 +267,7 @@ query orderbyprops($payStatus: String, $contactName: String, $remark: String, $p
       openid
       id
     }
-    service_id {
-      id
-      description
-      price
-      startTime
-      lastTime
-      createdAt
-      updatedAt
-    }
+    servicePrice
     customerNumber
   }
 }
@@ -227,6 +287,10 @@ mutation createuser($email: String, $updatedAt: String, $admin: String, $passwor
   }
 }
 
+mutation deletestore($id: ID, $name: String, $description: String, $address: String, $alert: String, $createdAt: String, $updatedAt: String) {
+  deletestore: delete_store(id: $id name: $name description: $description address: $address alert: $alert createdAt: $createdAt updatedAt: $updatedAt)
+}
+
 mutation updateuser($email: String, $updatedAt: String, $admin: String, $password: String, $telephone: String, $nickname: String, $username: String, $createdAt: String, $openid: String, $id: ID) {
   updateuser: update_user(email: $email updatedAt: $updatedAt admin: $admin password: $password telephone: $telephone nickname: $nickname username: $username createdAt: $createdAt openid: $openid id: $id) {
     email
@@ -239,6 +303,19 @@ mutation updateuser($email: String, $updatedAt: String, $admin: String, $passwor
     createdAt
     openid
     id
+  }
+}
+
+mutation createstore($id: ID!, $slideshow: String, $name: String, $description: String, $address: String, $alert: String, $createdAt: String, $updatedAt: String) {
+  createstore: create_store(id: $id slideshow: $slideshow name: $name description: $description address: $address alert: $alert createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    name
+    description
+    address
+    alert
+    slideshow
+    createdAt
+    updatedAt
   }
 }
 
@@ -255,6 +332,8 @@ mutation updateservice($id: ID, $server_id: ID, $repertory_id: ID, $description:
     }
     repertory_id {
       id
+
+
       count
       createdAt
       updatedAt
@@ -281,6 +360,8 @@ mutation createservice($id: ID!, $server_id: ID, $repertory_id: ID, $description
     }
     repertory_id {
       id
+
+
       count
       createdAt
       updatedAt
@@ -305,11 +386,34 @@ mutation updateserver($id: ID, $name: String, $description: String, $img: String
   }
 }
 
-mutation createrepertory($id: ID!, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
-  createrepertory: create_repertory(id: $id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+mutation updatestore($id: ID, $slideshow: String, $name: String, $description: String, $address: String, $alert: String, $createdAt: String, $updatedAt: String) {
+  updatestore: update_store(id: $id slideshow: $slideshow name: $name description: $description address: $address alert: $alert createdAt: $createdAt updatedAt: $updatedAt) {
     id
+    name
+    description
+    address
+    alert
+    slideshow
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createrepertory($id: ID!, $server_id: ID, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  createrepertory: create_repertory(id: $id server_id: $server_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+    id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
     service_id {
       id
+
+
       description
       price
       startTime
@@ -323,26 +427,39 @@ mutation createrepertory($id: ID!, $service_id: ID, $count: Int, $createdAt: Str
   }
 }
 
-mutation deleteorder($payStatus: String, $contactName: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $createdAt: String, $orderStatus: String, $id: ID, $user_id: ID, $service_id: ID, $customerNumber: Int) {
-  deleteorder: delete_order(payStatus: $payStatus contactName: $contactName remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone createdAt: $createdAt orderStatus: $orderStatus id: $id user_id: $user_id service_id: $service_id customerNumber: $customerNumber)
+mutation deleteorder($payStatus: String, $contactName: String, $remark: String, $serviceStartTime: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $serviceLastTime: String, $createdAt: String, $repertory_id: ID, $orderStatus: String, $serverName: String, $id: ID, $serviceDescription: String, $serverDescription: String, $user_id: ID, $servicePrice: Float, $customerNumber: Int) {
+  deleteorder: delete_order(payStatus: $payStatus contactName: $contactName remark: $remark serviceStartTime: $serviceStartTime payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone serviceLastTime: $serviceLastTime createdAt: $createdAt repertory_id: $repertory_id orderStatus: $orderStatus serverName: $serverName id: $id serviceDescription: $serviceDescription serverDescription: $serverDescription user_id: $user_id servicePrice: $servicePrice customerNumber: $customerNumber)
 }
 
 mutation deleteuser($email: String, $updatedAt: String, $admin: String, $password: String, $telephone: String, $nickname: String, $username: String, $createdAt: String, $openid: String, $id: ID) {
   deleteuser: delete_user(email: $email updatedAt: $updatedAt admin: $admin password: $password telephone: $telephone nickname: $nickname username: $username createdAt: $createdAt openid: $openid id: $id)
 }
 
-mutation createorder($payStatus: String, $contactName: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $createdAt: String, $orderStatus: String, $id: ID!, $user_id: ID, $service_id: ID, $customerNumber: Int) {
-  createorder: create_order(payStatus: $payStatus contactName: $contactName remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone createdAt: $createdAt orderStatus: $orderStatus id: $id user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+mutation createorder($payStatus: String, $contactName: String, $remark: String, $serviceStartTime: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $serviceLastTime: String, $createdAt: String, $repertory_id: ID, $orderStatus: String, $serverName: String, $id: ID!, $serviceDescription: String, $serverDescription: String, $user_id: ID, $servicePrice: Float, $customerNumber: Int) {
+  createorder: create_order(payStatus: $payStatus contactName: $contactName remark: $remark serviceStartTime: $serviceStartTime payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone serviceLastTime: $serviceLastTime createdAt: $createdAt repertory_id: $repertory_id orderStatus: $orderStatus serverName: $serverName id: $id serviceDescription: $serviceDescription serverDescription: $serverDescription user_id: $user_id servicePrice: $servicePrice customerNumber: $customerNumber) {
     payStatus
     contactName
     remark
+    serviceStartTime
     payCount
     updatedAt
     payTime
     contactTelephone
+    serviceLastTime
     createdAt
+    repertory_id {
+      id
+
+
+      count
+      createdAt
+      updatedAt
+    }
     orderStatus
+    serverName
     id
+    serviceDescription
+    serverDescription
     user_id {
       email
       updatedAt
@@ -355,35 +472,40 @@ mutation createorder($payStatus: String, $contactName: String, $remark: String, 
       openid
       id
     }
-    service_id {
-      id
-      description
-      price
-      startTime
-      lastTime
-      createdAt
-      updatedAt
-    }
+    servicePrice
     customerNumber
   }
 }
 
-mutation deleterepertory($id: ID, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
-  deleterepertory: delete_repertory(id: $id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt)
+mutation deleterepertory($id: ID, $server_id: ID, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  deleterepertory: delete_repertory(id: $id server_id: $server_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt)
 }
 
-mutation updateorder($payStatus: String, $contactName: String, $remark: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $createdAt: String, $orderStatus: String, $id: ID, $user_id: ID, $service_id: ID, $customerNumber: Int) {
-  updateorder: update_order(payStatus: $payStatus contactName: $contactName remark: $remark payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone createdAt: $createdAt orderStatus: $orderStatus id: $id user_id: $user_id service_id: $service_id customerNumber: $customerNumber) {
+mutation updateorder($payStatus: String, $contactName: String, $remark: String, $serviceStartTime: String, $payCount: String, $updatedAt: String, $payTime: String, $contactTelephone: String, $serviceLastTime: String, $createdAt: String, $repertory_id: ID, $orderStatus: String, $serverName: String, $id: ID, $serviceDescription: String, $serverDescription: String, $user_id: ID, $servicePrice: Float, $customerNumber: Int) {
+  updateorder: update_order(payStatus: $payStatus contactName: $contactName remark: $remark serviceStartTime: $serviceStartTime payCount: $payCount updatedAt: $updatedAt payTime: $payTime contactTelephone: $contactTelephone serviceLastTime: $serviceLastTime createdAt: $createdAt repertory_id: $repertory_id orderStatus: $orderStatus serverName: $serverName id: $id serviceDescription: $serviceDescription serverDescription: $serverDescription user_id: $user_id servicePrice: $servicePrice customerNumber: $customerNumber) {
     payStatus
     contactName
     remark
+    serviceStartTime
     payCount
     updatedAt
     payTime
     contactTelephone
+    serviceLastTime
     createdAt
+    repertory_id {
+      id
+
+
+      count
+      createdAt
+      updatedAt
+    }
     orderStatus
+    serverName
     id
+    serviceDescription
+    serverDescription
     user_id {
       email
       updatedAt
@@ -396,15 +518,7 @@ mutation updateorder($payStatus: String, $contactName: String, $remark: String, 
       openid
       id
     }
-    service_id {
-      id
-      description
-      price
-      startTime
-      lastTime
-      createdAt
-      updatedAt
-    }
+    servicePrice
     customerNumber
   }
 }
@@ -417,11 +531,21 @@ mutation deleteservice($id: ID, $server_id: ID, $repertory_id: ID, $description:
   deleteservice: delete_service(id: $id server_id: $server_id repertory_id: $repertory_id description: $description price: $price startTime: $startTime lastTime: $lastTime createdAt: $createdAt updatedAt: $updatedAt)
 }
 
-mutation updaterepertory($id: ID, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
-  updaterepertory: update_repertory(id: $id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
+mutation updaterepertory($id: ID, $server_id: ID, $service_id: ID, $count: Int, $createdAt: String, $updatedAt: String) {
+  updaterepertory: update_repertory(id: $id server_id: $server_id service_id: $service_id count: $count createdAt: $createdAt updatedAt: $updatedAt) {
     id
+    server_id {
+      id
+      name
+      description
+      img
+      createdAt
+      updatedAt
+    }
     service_id {
       id
+
+
       description
       price
       startTime

@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {Card, WhiteSpace, Button, Carousel, WingBlank, Flex} from 'antd-mobile';
+import {Card, WhiteSpace, Button, WingBlank, Flex} from 'antd-mobile';
 
 class Server extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
-            imgHeight: 176,
         }
     }
 
@@ -14,32 +12,6 @@ class Server extends Component {
         let {tip, servers} = this.props;
         return (
             <div>
-                <WingBlank>
-                    <Carousel
-                        autoplay={true}
-                        infinite
-                    >
-                        {this.state.data.map(val => (
-                            <a
-                                key={val}
-                                href="http://www.alipay.com"
-                                style={{display: 'inline-block', width: '100%', height: this.state.imgHeight}}
-                            >
-                                <img
-                                    src={`https://zos.alipayobjects.com/rmsportal/${val}.png`}
-                                    alt=""
-                                    style={{width: '100%', verticalAlign: 'top'}}
-                                    onLoad={() => {
-                                        window.dispatchEvent(new Event('resize'));
-                                        this.setState({imgHeight: 'auto'});
-                                    }}
-                                />
-                            </a>
-                        ))}
-                    </Carousel>
-                </WingBlank>
-
-
                 {
                     tip ?
                         <div className={'center'}>{tip}</div>
@@ -68,7 +40,7 @@ class Server extends Component {
                                                     </Flex.Item>
                                                     <Flex.Item>
                                                         <Button type='ghost' size='small'
-                                                                onClick={this.props.pageSwitchToService(server.id)}>选我</Button>
+                                                                onClick={this.props.pageSwitchToService(server.id, server.name, server.description)}>选我</Button>
                                                     </Flex.Item>
                                                 </Flex>
                                             </div>

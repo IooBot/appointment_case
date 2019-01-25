@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
-import {userbyid, updateuser} from "../../gql";
+import {userbyid, updateuser} from "../../../gql";
 import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
-import {InputItem, Toast, List, Button, ActivityIndicator} from 'antd-mobile';
+import {InputItem, Toast, List, Button, ActivityIndicator, WhiteSpace} from 'antd-mobile';
+import copy from 'copy-to-clipboard';
+import moment from 'moment';
+
+const Item = List.Item;
+moment.locale('zh-cn');
 
 class User extends Component {
     render() {
@@ -36,9 +41,8 @@ class User extends Component {
                                         :
                                         ''
                                 }
-                                <Message
-                                    user={user}
-                                />
+                                <Message user={user} header="填写你的信息"/>
+                                <MoreMessage user={user}/>
                             </div>
                         )
                     }
@@ -47,8 +51,6 @@ class User extends Component {
         );
     }
 }
-
-export default User;
 
 class Message extends Component {
     constructor(props) {
@@ -89,32 +91,78 @@ class Message extends Component {
     };
 
     render() {
+        let {name, hasError, phone, userID} = this.state;
+        let {header} = this.props;
         return (
             <div>
-                <List renderHeader={() => '填写你的信息'}>
-                    <InputItem
-                        placeholder="请输入联系人姓名"
-                        value={this.state.name}
-                        onChange={this.nameChange}
-                    >姓名</InputItem>
-                    <InputItem
-                        type="phone"
-                        placeholder="请输入手机号码"
-                        error={this.state.hasError}
-                        onErrorClick={this.onErrorClick}
-                        onChange={this.onChange}
-                        value={this.state.phone}
-                    >手机号码</InputItem>
-                </List>
+                {
+                    header ?
+                        <List renderHeader={() => header}>
+                            <InputItem
+                                placeholder="请输入联系人姓名"
+                                value={name}
+                                onChange={this.nameChange}
+                            >姓名</InputItem>
+                            <InputItem
+                                type="phone"
+                                placeholder="请输入手机号码"
+                                error={hasError}
+                                onErrorClick={this.onErrorClick}
+                                onChange={this.onChange}
+                                value={phone}
+                            >手机号码</InputItem>
+                        </List>
+                        :
+                        <List>
+                            <InputItem
+                                placeholder="请输入联系人姓名"
+                                value={name}
+                                onChange={this.nameChange}
+                            >姓名</InputItem>
+                            <InputItem
+                                type="phone"
+                                placeholder="请输入手机号码"
+                                error={hasError}
+                                onErrorClick={this.onErrorClick}
+                                onChange={this.onChange}
+                                value={phone}
+                            >手机号码</InputItem>
+                        </List>
+                }
                 <SaveButton
-                    userID={this.state.userID}
-                    telephone={this.state.phone}
-                    name={this.state.name}
+                    userID={userID}
+                    telephone={phone}
+                    name={name}
                 />
             </div>
         );
     }
 }
+
+const MoreMessage = (props) => {
+    let {id, createdAt} = props.user;
+    let userUIDShow = id.replace('user_', '').replace('_', '&&');
+    return (
+        <div>
+            <WhiteSpace/>
+            <List renderHeader={() => '更多资料'}>
+                <div className="my-list-subtitle">个人识别码（凭该码和商家沟通）</div>
+                <Item
+                    onClick={() => {
+                        copy(userUIDShow);
+                        Toast.success('复制成功', 1);
+                    }}
+                >
+                    {userUIDShow}
+                </Item>
+                <div className="my-list-subtitle">创建时间</div>
+                <Item>
+                    {moment(Number(createdAt)).format("YYYY-MM-DD HH:mm:ss")}
+                </Item>
+            </List>
+        </div>
+    )
+};
 
 class SaveButton extends Component {
     constructor(props) {
@@ -125,8 +173,7 @@ class SaveButton extends Component {
     render() {
         let {userID, telephone, name} = this.props;
         return (
-            <Mutation mutation={gql(updateuser)}
-            >
+            <Mutation mutation={gql(updateuser)}>
                 {(updateuser, {loading, error}) => {
                     if (loading)
                         return (
@@ -154,3 +201,6 @@ class SaveButton extends Component {
         )
     }
 }
+
+export {Message}
+export default User;
