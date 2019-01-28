@@ -18,13 +18,17 @@ import {
     serverbyprops,
     servicebyprops,
     createserver,
+    updateserver,
     deleteserveranddeleteserviceAnddeleterepertory,
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
     deleteserviceAnddeleterepertory
 } from "../../gql";
 import {idGen} from "../../func";
+import axios from 'axios';
+import {storeFile} from "../../config";
 
+axios.defaults.withCredentials = true;
 const Item = List.Item;
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
@@ -38,13 +42,16 @@ class Release extends Component {
         }
     }
 
-    dontShowMe = () => {
-        this.setState({
-            serverID: ''
-        })
+    modifyServerID = (id) => {
+        return () => {
+            this.setState({
+                serverID: id
+            })
+        };
     };
 
     render() {
+        let {serverID} = this.state;
         return (
             <div>
                 <WhiteSpace/>
@@ -103,13 +110,19 @@ class Release extends Component {
                                     </List>
 
                                     {
-                                        this.state.serverID === 'add' ?
+                                        serverID === 'add' ?
                                             <AddServer/>
                                             :
-                                            this.state.serverID ?
-                                                <ServiceList serverID={this.state.serverID} dontShowMe={this.dontShowMe}/>
+                                            serverID.startsWith('modify') ?
+                                                <ModifyServer
+                                                    server={data.serverbyprops[serverID.replace('modify', '')]}/>
                                                 :
-                                                ''
+                                                serverID ?
+                                                    <ServiceList serverID={serverID}
+                                                                 serverIndex={data.serverbyprops.findIndex((server => server.id === serverID))}
+                                                                 modifyServerID={this.modifyServerID}/>
+                                                    :
+                                                    ''
                                     }
                                 </div>
                             )
@@ -142,7 +155,8 @@ class ServiceList extends Component {
     };
 
     render() {
-        let {serverID, dontShowMe} = this.props;
+        let {serverID, modifyServerID, serverIndex} = this.props;
+        let {serviceID} = this.state;
         return (
             <Query query={gql(servicebyprops)} variables={{server_id: serverID}}>
                 {
@@ -161,7 +175,7 @@ class ServiceList extends Component {
                         }
                         return (
                             <div>
-                                <List renderHeader={() => 'TA的服务项'} className="my-list">
+                                <List renderHeader={() => 'TA的服务项目'} className="my-list">
                                     {
                                         data.servicebyprops.map(service =>
                                             <Item
@@ -190,8 +204,21 @@ class ServiceList extends Component {
                                     >
                                         {
                                             data.servicebyprops.length === 0 ?
-                                                '没有服务项，点我添加' : '添加'
+                                                '没有服务项目，点我添加' : '添加其他服务项目'
                                         }
+                                    </Item>
+
+                                    <Item
+                                        arrow="horizontal"
+                                        multipleLine
+                                        onClick={() => {
+                                            this.setState({
+                                                serviceID: ''
+                                            });
+                                            modifyServerID(`modify${serverIndex}`)();
+                                        }}
+                                    >
+                                        <span style={{color: '#3f536e'}}>修改该服务</span>
                                     </Item>
 
                                     <Mutation
@@ -200,8 +227,8 @@ class ServiceList extends Component {
                                             {query: gql(serverbyprops), variables: {}},
                                             {query: gql(servicebyprops), variables: {server_id: serverID}}
                                         ]}
-                                        onCompleted={()=>{
-                                            dontShowMe()
+                                        onCompleted={() => {
+                                            modifyServerID('')
                                         }}
                                     >
                                         {(deleteEvery, {loading, error}) => {
@@ -239,13 +266,12 @@ class ServiceList extends Component {
                                             )
                                         }}
                                     </Mutation>
-
                                 </List>
 
                                 {
-                                    this.state.serviceID ?
+                                    serviceID ?
                                         <ServiceDetail
-                                            serviceID={this.state.serviceID}
+                                            serviceID={serviceID}
                                             serverID={serverID}
                                             donotShowDetail={this.donotShowDetail}
                                         />
@@ -263,33 +289,204 @@ class ServiceList extends Component {
     }
 }
 
-class AddServer extends Component {
+class ModifyServer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: props.server.id,
+            img: props.server.img,
+            name: props.server.name,
+            description: props.server.description,
             files: [],
-            name: '',
-            description: ''
+            imgDatas: []
         }
     }
 
     onReset = () => {
         this.setState({
-            files: [],
             name: '',
-            description: ''
+            description: '',
+            files: [],
+            imgDatas: []
         })
     };
 
-    onChange = (files, type) => {
-        console.log(files, type);
-        this.setState({
-            files,
+    onChange = (files, operationType) => {
+        console.log("files", files, "operationType", operationType);
+
+        let imgDatas = [];
+
+        files.forEach((file, index) => {
+            let base64Cont = files[index].url.split(',')[1];
+            let imgType = files[index].file.type.split('/')[1];
+            let imgNewName = `${Date.now() + '_' + Math.floor(Math.random() * 100)}.${imgType}`;
+
+            const imgData = {
+                'file-name': `appointment/images/${imgNewName}`,
+                'bucket': 'case',
+                'cont': base64Cont,
+                'public': true,
+                'format': 'base64'
+            };
+
+            imgDatas.push(imgData)
         });
+
+        this.setState({
+            imgDatas,
+            files
+        });
+
+        console.log(imgDatas, 'imgDatas');
     };
 
     render() {
-        const {files, name, description} = this.state;
+        const {id, files, name, description, imgDatas} = this.state;
+        return (
+            <List renderHeader={() => '请修改服务信息'}>
+                <InputItem onChange={(e) => {
+                    this.setState({name: e})
+                }} value={name} placeholder="请修改名称">名称</InputItem>
+                <InputItem onChange={(e) => {
+                    this.setState({description: e})
+                }} value={description} placeholder="请修改简介">简介</InputItem>
+                <div className={'my-list-subtitle'}>修改图片</div>
+                <ImagePicker
+                    files={files}
+                    onChange={this.onChange}
+                    onImageClick={(index, fs) => console.log(index, fs)}
+                    selectable={files.length < 1}
+                    multiple={false}
+                />
+                <Item>
+                    <ModifyServerButton
+                        id={id}
+                        name={name}
+                        description={description}
+                        imgDatas={imgDatas}
+                    />
+                    <Button size="small" inline style={{marginLeft: '2.5px'}} onClick={this.onReset}>重置</Button>
+                </Item>
+            </List>
+        );
+    }
+}
+
+class ModifyServerButton extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+
+    uploadImg = () => {
+        let {imgDatas} = this.props;
+        console.log("imgDatas", imgDatas);
+
+        return imgDatas.map((imgData) => (
+            axios({
+                url: storeFile,
+                method: 'post',
+                data: imgData
+            })
+        ));
+    };
+
+    render() {
+        let {name, description, id, imgDatas} = this.props;
+        return (
+            <Mutation
+                mutation={gql(updateserver)}
+                refetchQueries={[{query: gql(serverbyprops), variables: {}}]}
+            >
+                {(updateserver, {loading, error}) => {
+                    if (loading)
+                        return (
+                            <div className="loading">
+                                <div className="align">
+                                    <ActivityIndicator text="Loading..." size="large"/>
+                                </div>
+                            </div>
+                        );
+                    if (error)
+                        return 'error';
+                    let varObj = {
+                        id,
+                        name,
+                        description,
+                        updatedAt: new Date().getTime()
+                    };
+                    return (
+                        <Button type="primary" size="small" inline onClick={() => {
+                            if (imgDatas.length !== 0) {
+                                Promise.all(this.uploadImg()).then(res => {
+                                    let prefix = 'https://case-1254337200.cos.ap-beijing.myqcloud.com/';
+                                    let img = imgDatas.length === 1 ? prefix + imgDatas[0]['file-name'] : imgDatas.map((imgData, index) => (
+                                        prefix + imgDatas[index]['file-name']
+                                    ));
+                                    updateserver({variables: {...varObj, img}})
+                                });
+                            } else {
+                                updateserver({variables: varObj})
+                            }
+                        }}>修改</Button>
+                    )
+                }}
+            </Mutation>
+        )
+    }
+}
+
+class AddServer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            description: '',
+            files: [],
+            imgDatas: []
+        }
+    }
+
+    onReset = () => {
+        this.setState({
+            name: '',
+            description: '',
+            files: [],
+            imgDatas: []
+        })
+    };
+
+    onChange = (files, operationType) => {
+        console.log("files", files, "operationType", operationType);
+
+        let imgDatas = [];
+
+        files.forEach((file, index) => {
+            let base64Cont = files[index].url.split(',')[1];
+            let imgType = files[index].file.type.split('/')[1];
+            let imgNewName = `${Date.now() + '_' + Math.floor(Math.random() * 100)}.${imgType}`;
+
+            const imgData = {
+                'file-name': `appointment/images/${imgNewName}`,
+                'bucket': 'case',
+                'cont': base64Cont,
+                'public': true,
+                'format': 'base64'
+            };
+
+            imgDatas.push(imgData)
+        });
+
+        this.setState({
+            imgDatas,
+            files
+        });
+
+        console.log(imgDatas, 'imgDatas');
+    };
+
+    render() {
+        const {files, name, description, imgDatas} = this.state;
         return (
             <List renderHeader={() => '请输入服务信息'}>
                 <InputItem onChange={(e) => {
@@ -307,8 +504,8 @@ class AddServer extends Component {
                     multiple={false}
                 />
                 <Item>
-                    <SubmitServerButton
-                        img={files[0] ? files[0].url : ''}
+                    <CreateServerButton
+                        imgDatas={imgDatas}
                         name={name}
                         description={description}
                     />
@@ -319,14 +516,27 @@ class AddServer extends Component {
     }
 }
 
-class SubmitServerButton extends Component {
+class CreateServerButton extends Component {
     constructor(props) {
         super(props);
         this.state = {}
     }
 
+    uploadImg = () => {
+        let {imgDatas} = this.props;
+        console.log("imgDatas", imgDatas);
+
+        return imgDatas.map((imgData) => (
+            axios({
+                url: storeFile,
+                method: 'post',
+                data: imgData
+            })
+        ));
+    };
+
     render() {
-        let {name, description, img} = this.props;
+        let {name, description, imgDatas} = this.props;
         return (
             <Mutation
                 mutation={gql(createserver)}
@@ -347,13 +557,20 @@ class SubmitServerButton extends Component {
                         id: idGen('server'),
                         name,
                         description,
-                        img,
                         createdAt: new Date().getTime(),
                         updatedAt: ''
                     };
                     return (
                         <Button type="primary" size="small" inline onClick={() => {
-                            createserver({variables: varObj})
+
+                            Promise.all(this.uploadImg()).then(res => {
+                                let prefix = 'https://case-1254337200.cos.ap-beijing.myqcloud.com/';
+                                let img = imgDatas.length === 1 ? prefix + imgDatas[0]['file-name'] : imgDatas.map((imgData, index) => (
+                                    prefix + imgDatas[index]['file-name']
+                                ));
+                                createserver({variables: {...varObj, img}})
+                            });
+
                         }}>提交</Button>
                     )
                 }}
@@ -508,7 +725,7 @@ class ServiceDetailRender extends Component {
                     <Item>
                         {
                             serviceID === 'add' ?
-                                <SubmitServiceCreateButton
+                                <CreateServiceButton
                                     serverID={serverID}
                                     count={repertory}
                                     description={description}
@@ -517,7 +734,7 @@ class ServiceDetailRender extends Component {
                                     lastTime={endDate.getTime() - date.getTime()}
                                 />
                                 :
-                                <SubmitServiceUpdateButton
+                                <UpdateServiceButton
                                     serverID={serverID}
                                     serviceID={serviceID}
                                     repertoryID={repertoryID}
@@ -533,7 +750,7 @@ class ServiceDetailRender extends Component {
                             serviceID === 'add' ?
                                 ''
                                 :
-                                <SubmitServiceDeleteButton
+                                <DeleteServiceButton
                                     serverID={serverID}
                                     serviceID={serviceID}
                                     repertoryID={repertoryID}
@@ -548,7 +765,7 @@ class ServiceDetailRender extends Component {
     }
 }
 
-class SubmitServiceUpdateButton extends Component {
+class UpdateServiceButton extends Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -596,7 +813,7 @@ class SubmitServiceUpdateButton extends Component {
     }
 }
 
-class SubmitServiceCreateButton extends Component {
+class CreateServiceButton extends Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -645,7 +862,7 @@ class SubmitServiceCreateButton extends Component {
     }
 }
 
-class SubmitServiceDeleteButton extends Component {
+class DeleteServiceButton extends Component {
     constructor(props) {
         super(props);
         this.state = {}

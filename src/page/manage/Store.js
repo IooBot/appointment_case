@@ -5,7 +5,10 @@ import {updateuser, userbyprops, storebyprops, createstore, updatestore} from ".
 import {Query, Mutation} from "react-apollo";
 import gql from "graphql-tag";
 import {Message} from '../customer/home/User';
+import {storeFile} from "../../config";
+import axios from 'axios';
 
+axios.defaults.withCredentials = true;
 const alert = Modal.alert;
 const Item = List.Item;
 const prompt = Modal.prompt;
@@ -58,11 +61,11 @@ class StoreDetailFetch extends Component {
                         let store, newStore;
                         let storeLength = data.storebyprops.length;
                         if (storeLength === 0) {
-                            console.log('尚未个性化 store');
+                            // console.log('尚未个性化 store');
                             store = {};
                             newStore = true;
                         } else if (storeLength === 1) {
-                            console.log('存在 store, update');
+                            // console.log('存在 store, update');
                             store = data.storebyprops[0];
                             newStore = false;
                         } else {
@@ -93,23 +96,19 @@ class StoreDetailRender extends Component {
         super(props);
         this.state = {
             files: [],
+            imgDatas: [],
             name: props.name,
             description: props.description,
             address: props.address,
             alert: props.alert,
-            slideshow: props.slideshow,
+            slideshow: props.slideshow, //未进行展示
         }
-    }
-
-    componentWillReceiveProps(next) {
-        this.setState({
-            newStore: next.newStore
-        })
     }
 
     onReset = () => {
         this.setState({
             files: [],
+            imgDatas: [],
             name: '',
             description: '',
             address: '',
@@ -117,15 +116,37 @@ class StoreDetailRender extends Component {
         })
     };
 
-    onChange = (files, type) => {
-        console.log(files, type);
-        this.setState({
-            files,
+    onChange = (files, operationType) => {
+        console.log("files", files, "operationType", operationType);
+
+        let imgDatas = [];
+
+        files.forEach((file, index) => {
+            let base64Cont = files[index].url.split(',')[1];
+            let imgType = files[index].file.type.split('/')[1];
+            let imgNewName = `${Date.now() + '_' + Math.floor(Math.random() * 100)}.${imgType}`;
+
+            const imgData = {
+                'file-name': `appointment/images/${imgNewName}`,
+                'bucket': 'case',
+                'cont': base64Cont,
+                'public': true,
+                'format': 'base64'
+            };
+
+            imgDatas.push(imgData)
         });
+
+        this.setState({
+            imgDatas,
+            files
+        });
+
+        console.log(imgDatas, 'imgDatas');
     };
 
     render() {
-        let {files, name, description, address, alert, slideshow} = this.state;
+        let {files, name, description, address, alert, slideshow, imgDatas} = this.state;
         let {newStore} = this.props;
         return (
             <List renderHeader={() => '店铺个性化管理'} className="my-list">
@@ -141,7 +162,7 @@ class StoreDetailRender extends Component {
                 <InputItem onChange={(e) => {
                     this.setState({alert: e})
                 }} value={alert} placeholder="通告会显示在用户界面的服务首页">通告</InputItem>
-                <div className={'my-list-subtitle'}>页面轮播图（轮播图设置暂时无效）</div>
+                <div className={'my-list-subtitle'}>页面轮播图</div>
                 <ImagePicker
                     files={files}
                     onChange={this.onChange}
@@ -153,7 +174,7 @@ class StoreDetailRender extends Component {
                     {
                         newStore ?
                             <CreateStoreButton
-                                img={files[0] ? files[0].url : ''}
+                                imgDatas={imgDatas}
                                 name={name}
                                 description={description}
                                 address={address}
@@ -162,7 +183,7 @@ class StoreDetailRender extends Component {
                             />
                             :
                             <UpdateStoreButton
-                                img={files[0] ? files[0].url : ''}
+                                imgDatas={imgDatas}
                                 name={name}
                                 description={description}
                                 address={address}
@@ -183,8 +204,21 @@ class UpdateStoreButton extends Component {
         this.state = {}
     }
 
+    uploadImg = () => {
+        let {imgDatas} = this.props;
+        console.log("imgDatas", imgDatas);
+
+        return imgDatas.map((imgData) => (
+            axios({
+                url: storeFile,
+                method: 'post',
+                data: imgData
+            })
+        ));
+    };
+
     render() {
-        let {name, description, address, alert, slideshow, img} = this.props;
+        let {name, description, address, alert, slideshow, imgDatas} = this.props;
         return (
             <Mutation
                 mutation={gql(updatestore)}
@@ -207,12 +241,21 @@ class UpdateStoreButton extends Component {
                         description,
                         address,
                         alert,
-                        slideshow,
                         updatedAt: new Date().getTime(),
                     };
                     return (
                         <Button type="primary" size="small" inline onClick={() => {
-                            updatestore({variables: varObj})
+                            if (imgDatas.length !== 0) {
+                                Promise.all(this.uploadImg()).then(res => {
+                                    let prefix = 'https://case-1254337200.cos.ap-beijing.myqcloud.com/';
+                                    let slideshow = imgDatas.length === 1 ? prefix + imgDatas[0]['file-name'] : imgDatas.map((imgData, index) => (
+                                        prefix + imgDatas[index]['file-name']
+                                    ));
+                                    updatestore({variables: {...varObj, slideshow}})
+                                });
+                            } else {
+                                updatestore({variables: varObj})
+                            }
                         }}>更新</Button>
                     )
                 }}
@@ -227,8 +270,21 @@ class CreateStoreButton extends Component {
         this.state = {}
     }
 
+    uploadImg = () => {
+        let {imgDatas} = this.props;
+        console.log("imgDatas", imgDatas);
+
+        return imgDatas.map((imgData) => (
+            axios({
+                url: storeFile,
+                method: 'post',
+                data: imgData
+            })
+        ));
+    };
+
     render() {
-        let {name, description, address, alert, slideshow, img} = this.props;
+        let {name, description, address, alert, slideshow, imgDatas} = this.props;
         return (
             <Mutation
                 mutation={gql(createstore)}
@@ -251,13 +307,18 @@ class CreateStoreButton extends Component {
                         description: description ? description : '',
                         address: address ? address : '',
                         alert: alert ? alert : '',
-                        slideshow: slideshow ? slideshow : [],
                         createdAt: new Date().getTime(),
                         updatedAt: ''
                     };
                     return (
                         <Button type="primary" size="small" inline onClick={() => {
-                            createstore({variables: varObj})
+                            Promise.all(this.uploadImg()).then(res => {
+                                let prefix = 'https://case-1254337200.cos.ap-beijing.myqcloud.com/';
+                                let slideshow = imgDatas.length === 1 ? prefix + imgDatas[0]['file-name'] : imgDatas.map((imgData, index) => (
+                                    prefix + imgDatas[index]['file-name']
+                                ));
+                                createstore({variables: {...varObj, slideshow}})
+                            });
                         }}>创建</Button>
                     )
                 }}

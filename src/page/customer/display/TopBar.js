@@ -47,6 +47,30 @@ class TopBar extends Component {
                                                 {store.alert}
                                             </NoticeBar>
                                             <WhiteSpace/>
+                                            <WingBlank>
+                                                <Carousel
+                                                    autoplay={true}
+                                                    infinite
+                                                >
+                                                    {store.slideshow.map(val => (
+                                                        <a
+                                                            key={val}
+                                                            href="/"
+                                                            style={{display: 'inline-block', width: '100%', height: this.state.imgHeight}}
+                                                        >
+                                                            <img
+                                                                src={val}
+                                                                alt=""
+                                                                style={{width: '100%', verticalAlign: 'top'}}
+                                                                onLoad={() => {
+                                                                    window.dispatchEvent(new Event('resize'));
+                                                                    this.setState({imgHeight: 'auto'});
+                                                                }}
+                                                            />
+                                                        </a>
+                                                    ))}
+                                                </Carousel>
+                                            </WingBlank>
                                         </div>
                                     )
                                 }
@@ -57,31 +81,6 @@ class TopBar extends Component {
                         }
                     }
                 </Query>
-
-                <WingBlank>
-                    <Carousel
-                        autoplay={true}
-                        infinite
-                    >
-                        {this.state.data.map(val => (
-                            <a
-                                key={val}
-                                href="http://www.alipay.com"
-                                style={{display: 'inline-block', width: '100%', height: this.state.imgHeight}}
-                            >
-                                <img
-                                    src={`https://zos.alipayobjects.com/rmsportal/${val}.png`}
-                                    alt=""
-                                    style={{width: '100%', verticalAlign: 'top'}}
-                                    onLoad={() => {
-                                        window.dispatchEvent(new Event('resize'));
-                                        this.setState({imgHeight: 'auto'});
-                                    }}
-                                />
-                            </a>
-                        ))}
-                    </Carousel>
-                </WingBlank>
             </div>
         );
     }

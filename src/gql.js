@@ -352,6 +352,20 @@ const createserver = `
     }
 `;
 
+const updateserver = `
+    mutation updateserver($id: ID, $name: String, $description: String, $img: String, $updatedAt: String) {
+        updateserver: update_server(id: $id name: $name description: $description img: $img updatedAt: $updatedAt) {
+            id
+            name
+            description
+            img
+            updatedAt
+        }
+    }
+`;
+
+
+
 const deleteserver = `mutation deleteserver($id: ID) {
     deleteserver: delete_server(id: $id)
 }`;
@@ -500,6 +514,7 @@ export {
     deleteorder,
     updateorder,
     createserver,
+    updateserver,
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
     deleteserviceAnddeleterepertory,
