@@ -420,9 +420,20 @@ class ModifyServerButton extends Component {
                             if (imgDatas.length !== 0) {
                                 Promise.all(this.uploadImg()).then(res => {
                                     let prefix = 'https://case-1254337200.cos.ap-beijing.myqcloud.com/';
-                                    let img = imgDatas.length === 1 ? prefix + imgDatas[0]['file-name'] : imgDatas.map((imgData, index) => (
-                                        prefix + imgDatas[index]['file-name']
-                                    ));
+                                    let img;
+                                    switch(imgDatas.length) {
+                                        case 0:
+                                            img = '';
+                                            break;
+                                        case 1:
+                                            img = prefix + imgDatas[0]['file-name'];
+                                            break;
+                                        default:
+                                            img = imgDatas.map((imgData, index) => (
+                                                prefix + imgDatas[index]['file-name']
+                                            ));
+                                            break;
+                                    }
                                     updateserver({variables: {...varObj, img}})
                                 });
                             } else {
@@ -562,12 +573,22 @@ class CreateServerButton extends Component {
                     };
                     return (
                         <Button type="primary" size="small" inline onClick={() => {
-
                             Promise.all(this.uploadImg()).then(res => {
                                 let prefix = 'https://case-1254337200.cos.ap-beijing.myqcloud.com/';
-                                let img = imgDatas.length === 1 ? prefix + imgDatas[0]['file-name'] : imgDatas.map((imgData, index) => (
-                                    prefix + imgDatas[index]['file-name']
-                                ));
+                                let img;
+                                switch(imgDatas.length) {
+                                    case 0:
+                                        img = '';
+                                        break;
+                                    case 1:
+                                        img = prefix + imgDatas[0]['file-name'];
+                                        break;
+                                    default:
+                                        img = imgDatas.map((imgData, index) => (
+                                            prefix + imgDatas[index]['file-name']
+                                        ));
+                                        break;
+                                }
                                 createserver({variables: {...varObj, img}})
                             });
 
