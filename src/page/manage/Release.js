@@ -19,10 +19,12 @@ import {
     servicebyprops,
     createserver,
     updateserver,
-    deleteserveranddeleteserviceAnddeleterepertory,
+    // deleteserveranddeleteserviceAnddeleterepertory,
+    deleteserveranddeleteservice,
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
-    deleteserviceAnddeleterepertory
+    // deleteserviceAnddeleterepertory,
+    deleteservice
 } from "../../gql";
 import {idGen} from "../../func";
 import axios from 'axios';
@@ -222,7 +224,8 @@ class ServiceList extends Component {
                                     </Item>
 
                                     <Mutation
-                                        mutation={gql(deleteserveranddeleteserviceAnddeleterepertory)}
+                                        // mutation={gql(deleteserveranddeleteserviceAnddeleterepertory)}
+                                        mutation={gql(deleteserveranddeleteservice)}
                                         refetchQueries={[
                                             {query: gql(serverbyprops), variables: {}},
                                             {query: gql(servicebyprops), variables: {server_id: serverID}}
@@ -315,11 +318,12 @@ class ModifyServer extends Component {
         console.log("files", files, "operationType", operationType);
 
         let imgDatas = [];
+        let {name} = this.state;
 
         files.forEach((file, index) => {
             let base64Cont = files[index].url.split(',')[1];
             let imgType = files[index].file.type.split('/')[1];
-            let imgNewName = `${Date.now() + '_' + Math.floor(Math.random() * 100)}.${imgType}`;
+            let imgNewName = `${name}_server.${imgType}`;
 
             const imgData = {
                 'file-name': `appointment/images/${imgNewName}`,
@@ -336,8 +340,6 @@ class ModifyServer extends Component {
             imgDatas,
             files
         });
-
-        console.log(imgDatas, 'imgDatas');
     };
 
     render() {
@@ -468,14 +470,13 @@ class AddServer extends Component {
     };
 
     onChange = (files, operationType) => {
-        console.log("files", files, "operationType", operationType);
-
         let imgDatas = [];
+        let {name} = this.state;
 
         files.forEach((file, index) => {
             let base64Cont = files[index].url.split(',')[1];
             let imgType = files[index].file.type.split('/')[1];
-            let imgNewName = `${Date.now() + '_' + Math.floor(Math.random() * 100)}.${imgType}`;
+            let imgNewName = `${name}_server.${imgType}`;
 
             const imgData = {
                 'file-name': `appointment/images/${imgNewName}`,
@@ -492,8 +493,6 @@ class AddServer extends Component {
             imgDatas,
             files
         });
-
-        console.log(imgDatas, 'imgDatas');
     };
 
     render() {
@@ -535,7 +534,6 @@ class CreateServerButton extends Component {
 
     uploadImg = () => {
         let {imgDatas} = this.props;
-        console.log("imgDatas", imgDatas);
 
         return imgDatas.map((imgData) => (
             axios({
@@ -890,10 +888,12 @@ class DeleteServiceButton extends Component {
     }
 
     render() {
-        let {serverID, serviceID, repertoryID, donotShowDetail} = this.props;
+        let {serverID, serviceID, donotShowDetail} = this.props;
+        // let {repertoryID} = this.props;
         return (
             <Mutation
-                mutation={gql(deleteserviceAnddeleterepertory)}
+                // mutation={gql(deleteserviceAnddeleterepertory)}
+                mutation={gql(deleteservice)}
                 refetchQueries={[
                     {query: gql(servicebyprops), variables: {server_id: serverID}}
                 ]}
@@ -911,7 +911,7 @@ class DeleteServiceButton extends Component {
                         return 'error';
                     let varObj = {
                         service_id: serviceID,
-                        repertory_id: repertoryID
+                        // repertory_id: repertoryID
                     };
                     return (
                         <Button size="small" type="warning" inline style={{marginLeft: '10px'}} onClick={() => {

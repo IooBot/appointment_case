@@ -332,9 +332,6 @@ const adminorderbyprops = `
         serviceStartTime
         serviceLastTime
         customerNumber
-        repertory_id {
-            id
-        }
       }
     }
 `;
@@ -448,9 +445,22 @@ const deleteserviceAnddeleterepertory = `
     }
 `;
 
+const deleteservice = `
+    mutation deleteservice($service_id: ID!) {      
+      deleteservice: delete_service(id: $service_id)
+    }
+`;
+
 const deleteserveranddeleteserviceAnddeleterepertory = `
     mutation deleteserviceAnddeleterepertory($server_id: ID!) {
       deleterepertory: delete_repertory(server_id: $server_id)
+      deleteservice: delete_service(server_id: $server_id)
+      deleteserver: delete_server(id: $server_id)
+    }
+`;
+
+const deleteserveranddeleteservice = `
+    mutation deleteserveranddeleteservice($server_id: ID!) {
       deleteservice: delete_service(server_id: $server_id)
       deleteserver: delete_server(id: $server_id)
     }
@@ -518,7 +528,9 @@ export {
     updateserviceAndupdaterepertory,
     createserviceAndcreaterepertory,
     deleteserviceAnddeleterepertory,
+    deleteservice,
     deleteserveranddeleteserviceAnddeleterepertory,
+    deleteserveranddeleteservice,
     createorderAndupdaterepertoryAndupdateuser,
     storebyprops,
     createstore,

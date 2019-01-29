@@ -7,6 +7,7 @@ import gql from "graphql-tag";
 import {Message} from '../customer/home/User';
 import {storeFile} from "../../config";
 import axios from 'axios';
+import {idGen} from "../../func";
 
 axios.defaults.withCredentials = true;
 const alert = Modal.alert;
@@ -72,7 +73,8 @@ class StoreDetailFetch extends Component {
                             console.log('store 数据库出现错误');
                         }
 
-                        let {name, description, address, alert, slideshow} = store;
+                        let {name, description, address, alert, slideshow, id} = store;
+                        let storeID = newStore ? idGen('store') : id;
                         return (
                             <StoreDetailRender
                                 name={name}
@@ -81,6 +83,7 @@ class StoreDetailFetch extends Component {
                                 alert={alert}
                                 slideshow={slideshow}
                                 newStore={newStore}
+                                storeID={storeID}
                             />
                         )
                     }
@@ -95,6 +98,7 @@ class StoreDetailRender extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            storeID: props.storeID,
             files: [],
             imgDatas: [],
             name: props.name,
@@ -120,11 +124,12 @@ class StoreDetailRender extends Component {
         console.log("files", files, "operationType", operationType);
 
         let imgDatas = [];
+        let {storeID} = this.state;
 
         files.forEach((file, index) => {
             let base64Cont = files[index].url.split(',')[1];
             let imgType = files[index].file.type.split('/')[1];
-            let imgNewName = `${Date.now() + '_' + Math.floor(Math.random() * 100)}.${imgType}`;
+            let imgNewName = `slideshow_${index}_storeID_${storeID}.${imgType}`;
 
             const imgData = {
                 'file-name': `appointment/images/${imgNewName}`,
@@ -146,7 +151,7 @@ class StoreDetailRender extends Component {
     };
 
     render() {
-        let {files, name, description, address, alert, slideshow, imgDatas} = this.state;
+        let {files, name, description, address, alert, slideshow, imgDatas, storeID} = this.state;
         let {newStore} = this.props;
         return (
             <List renderHeader={() => '店铺个性化管理'} className="my-list">
@@ -174,6 +179,7 @@ class StoreDetailRender extends Component {
                     {
                         newStore ?
                             <CreateStoreButton
+                                storeID={storeID}
                                 imgDatas={imgDatas}
                                 name={name}
                                 description={description}
@@ -183,6 +189,7 @@ class StoreDetailRender extends Component {
                             />
                             :
                             <UpdateStoreButton
+                                storeID={storeID}
                                 imgDatas={imgDatas}
                                 name={name}
                                 description={description}
@@ -206,7 +213,6 @@ class UpdateStoreButton extends Component {
 
     uploadImg = () => {
         let {imgDatas} = this.props;
-        console.log("imgDatas", imgDatas);
 
         return imgDatas.map((imgData) => (
             axios({
@@ -218,7 +224,7 @@ class UpdateStoreButton extends Component {
     };
 
     render() {
-        let {name, description, address, alert, slideshow, imgDatas} = this.props;
+        let {name, description, address, alert, imgDatas, storeID} = this.props;
         return (
             <Mutation
                 mutation={gql(updatestore)}
@@ -236,7 +242,7 @@ class UpdateStoreButton extends Component {
                     if (error)
                         return 'error';
                     let varObj = {
-                        id: 'default store',
+                        id: storeID,
                         name,
                         description,
                         address,
@@ -272,7 +278,6 @@ class CreateStoreButton extends Component {
 
     uploadImg = () => {
         let {imgDatas} = this.props;
-        console.log("imgDatas", imgDatas);
 
         return imgDatas.map((imgData) => (
             axios({
@@ -284,7 +289,7 @@ class CreateStoreButton extends Component {
     };
 
     render() {
-        let {name, description, address, alert, slideshow, imgDatas} = this.props;
+        let {name, description, address, alert, imgDatas, storeID} = this.props;
         return (
             <Mutation
                 mutation={gql(createstore)}
@@ -302,7 +307,7 @@ class CreateStoreButton extends Component {
                     if (error)
                         return 'error';
                     let varObj = {
-                        id: 'default store',
+                        id: storeID,
                         name: name ? name : '',
                         description: description ? description : '',
                         address: address ? address : '',
@@ -380,7 +385,7 @@ class ManagePeople extends Component {
                                     maskClosable={true}
                                     closable={true}
                                     title="设置你的联系方式"
-                                    onClose={()=>{
+                                    onClose={() => {
                                         this.setState({
                                             modal: false
                                         })
