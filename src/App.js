@@ -4,7 +4,7 @@ import './App.css';
 import Manage from "./page/manage/Manage";
 import Customer from './page/customer/Customer';
 import {getCookie} from "./cookie";
-// import {setCookie} from "./cookie";
+import {setCookie} from "./cookie";
 import {userbyprops, createuser, userbypropsNum} from "./gql";
 import {Query} from "react-apollo";
 import gql from "graphql-tag";
@@ -21,7 +21,9 @@ class App extends Component {
     }
 
     componentWillMount() {
-        // 本地开发
+        /*
+            本地开发版
+        */
         // 管理员
         // setCookie('openid', 'o2fcFvxE5nCQSb4BBHaB4kXcikSE');
         // 我
@@ -29,12 +31,21 @@ class App extends Component {
         // 用户
         // setCookie('openid', 'o2fcFv-h_CFKkNdEYgNkNp0Jt5TA');
 
-        // 微信版
+        /*
+            上线版
+        */
         let openid = getCookie("openid");
         console.log('get openid', openid);
 
         if (!openid) {
-            window.location.href = "/subscribe";
+            if(window.location.hostname.includes('apigateway.myqcloud.com')) {
+                // 未配域名，肯定没有配置
+                window.location.href = "/test/subscribe";
+                setCookie('openid', 'demo_openid');
+            } else {
+                // 已配域名，并且拥有配置
+                window.location.href = "/subscribe";
+            }
         }
     }
 
